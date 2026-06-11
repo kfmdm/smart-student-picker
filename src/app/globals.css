@@ -10,3 +10,148 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+.star-drift {
+  animation: galaxy-drift 24s linear infinite;
+}
+
+.star-drift span {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+  animation-name: star-twinkle;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+.participant-rocket {
+  animation: participant-float 5s ease-in-out infinite;
+}
+
+.participant-rocket--new {
+  animation:
+    rocket-arrival 1.8s cubic-bezier(0.18, 0.89, 0.32, 1.28) both,
+    participant-float 5s ease-in-out 1.8s infinite;
+}
+
+.participant-rocket--scramble {
+  animation: participant-scramble 0.46s ease-in-out infinite;
+  will-change: transform;
+}
+
+.winner-reveal {
+  animation: winner-center-pop 0.72s cubic-bezier(0.18, 0.89, 0.32, 1.28)
+    both;
+}
+
+@keyframes galaxy-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-28px, 18px, 0);
+  }
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+}
+
+@keyframes participant-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes participant-scramble {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+
+  20% {
+    transform: translate3d(
+        var(--scramble-x1, 74px),
+        var(--scramble-y1, -64px),
+        0
+      )
+      rotate(var(--scramble-r1, 14deg)) scale(1.06);
+  }
+
+  40% {
+    transform: translate3d(
+        var(--scramble-x2, -92px),
+        var(--scramble-y2, 58px),
+        0
+      )
+      rotate(var(--scramble-r2, -16deg)) scale(0.96);
+  }
+
+  60% {
+    transform: translate3d(
+        var(--scramble-x3, 118px),
+        var(--scramble-y3, 82px),
+        0
+      )
+      rotate(var(--scramble-r3, 20deg)) scale(1.08);
+  }
+
+  80% {
+    transform: translate3d(
+        var(--scramble-x4, -104px),
+        var(--scramble-y4, -86px),
+        0
+      )
+      rotate(var(--scramble-r4, -22deg)) scale(0.98);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+}
+
+@keyframes rocket-arrival {
+  0% {
+    opacity: 0;
+    transform: translate3d(-55vw, 36vh, 0) rotate(-12deg) scale(0.78);
+  }
+
+  65% {
+    opacity: 1;
+    transform: translate3d(22px, -18px, 0) rotate(4deg) scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0) scale(1);
+  }
+}
+
+@keyframes winner-center-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+
+  65% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

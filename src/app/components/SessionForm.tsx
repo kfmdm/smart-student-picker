@@ -1,8 +1,12 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import {
+  DEFAULT_SESSION_TYPE,
+  SESSION_TYPES,
+  type SessionType,
+} from "@/lib/sessionTypes";
 
-export type SessionType = "standard";
 export type SessionStatus = "inactive" | "active" | "closed";
 
 export type SessionFormValues = {
@@ -21,7 +25,7 @@ type SessionFormProps = {
 
 const defaultValues: SessionFormValues = {
   name: "",
-  type: "standard",
+  type: DEFAULT_SESSION_TYPE,
   status: "active",
 };
 
@@ -77,7 +81,11 @@ export default function SessionForm({
             updateField("type", event.target.value as SessionType)
           }
         >
-          <option value="standard">standard</option>
+          {SESSION_TYPES.map((sessionType) => (
+            <option key={sessionType.value} value={sessionType.value}>
+              {sessionType.label}
+            </option>
+          ))}
         </select>
 
         <select

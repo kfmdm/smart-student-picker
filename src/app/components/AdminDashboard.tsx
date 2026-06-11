@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Rocket } from "lucide-react";
+import { getSessionTypeLabel, type SessionType } from "@/lib/sessionTypes";
 import SessionForm, {
     SessionFormValues,
     SessionStatus,
-    SessionType,
 } from "./SessionForm";
 import QRCodeButton from "./QRCodeButton";
 type Session = {
@@ -28,7 +30,22 @@ export default function AdminDashboard() {
     }
 
     useEffect(() => {
-        loadSessions();
+        let isMounted = true;
+
+        async function loadInitialSessions() {
+            const response = await fetch("/api/sessions");
+            const data = await response.json();
+
+            if (isMounted) {
+                setSessions(data);
+            }
+        }
+
+        void loadInitialSessions();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     async function createSession(values: SessionFormValues) {
@@ -122,7 +139,9 @@ export default function AdminDashboard() {
                                         <tr key={session.uuid} className="border-b">
                                             <td className="py-3">{session.name}</td>
 
-                                            <td className="py-3">{session.type}</td>
+                                            <td className="py-3">
+                                                {getSessionTypeLabel(session.type)}
+                                            </td>
 
                                             <td className="py-3">{session.status}</td>
 
@@ -133,6 +152,13 @@ export default function AdminDashboard() {
                                             <td className="py-3 text-right">
                                                 <div className="flex justify-end gap-2">
                                                     <QRCodeButton uuid={session.uuid} />
+                                                    <Link
+                                                        href={`/sessions/${session.uuid}/live`}
+                                                        title="Live-Ansicht öffnen"
+                                                        className="flex items-center justify-center rounded bg-violet-700 p-2 text-white transition hover:bg-violet-800"
+                                                    >
+                                                        <Rocket size={18} />
+                                                    </Link>
                                                     <button
                                                         onClick={() => setEditingSession(session)}
                                                         className="rounded bg-blue-600 px-3 py-2 text-white"
@@ -196,7 +222,7 @@ export default function AdminDashboard() {
                                             </p>
 
                                             <p className="mt-1">
-                                                {session.type}
+                                                {getSessionTypeLabel(session.type)}
                                             </p>
                                         </div>
 
@@ -213,6 +239,13 @@ export default function AdminDashboard() {
 
                                     <div className="mt-5 flex flex-col gap-2">
                                         <QRCodeButton uuid={session.uuid} />
+                                        <Link
+                                            href={`/sessions/${session.uuid}/live`}
+                                            className="flex items-center justify-center gap-2 rounded-lg bg-violet-700 px-4 py-2 text-white"
+                                        >
+                                            <Rocket size={18} />
+                                            Live-Ansicht
+                                        </Link>
                                         <button
                                             onClick={() => setEditingSession(session)}
                                             className="rounded-lg bg-blue-600 px-4 py-2 text-white"
