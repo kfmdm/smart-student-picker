@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import {
   DEFAULT_SESSION_TYPE,
   isSessionType,
+  normalizeSessionSettings,
   type SessionType,
 } from "@/lib/sessionTypes";
 
@@ -20,6 +21,8 @@ export async function PUT(
   const type: SessionType = isSessionType(typeValue)
     ? typeValue
     : DEFAULT_SESSION_TYPE;
+  const settings = normalizeSessionSettings(type, body.settings);
+  const settingsJson = JSON.stringify(settings);
   const status: SessionStatus = body.status ?? "active";
 
   if (!name) {
@@ -31,11 +34,11 @@ export async function PUT(
 
   await prisma.$executeRaw`
     UPDATE sessions
-    SET name = ${name}, type = ${type}, status = ${status}
+    SET name = ${name}, type = ${type}, settings = ${settingsJson}, status = ${status}
     WHERE uuid = ${uuid}
   `;
 
-  return NextResponse.json({ uuid, name, type, status });
+  return NextResponse.json({ uuid, name, type, settings, status });
 }
 
 export async function DELETE(

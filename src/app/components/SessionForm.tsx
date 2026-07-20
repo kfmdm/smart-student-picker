@@ -3,7 +3,13 @@
 import { FormEvent, useState } from "react";
 import {
   DEFAULT_SESSION_TYPE,
+  DEFAULT_TEAM_SIZE,
+  MAX_TEAM_SIZE,
+  MIN_TEAM_SIZE,
   SESSION_TYPES,
+  clampTeamSize,
+  normalizeSessionSettings,
+  type SessionSettings,
   type SessionType,
 } from "@/lib/sessionTypes";
 
@@ -13,6 +19,7 @@ export type SessionFormValues = {
   name: string;
   type: SessionType;
   status: SessionStatus;
+  settings: SessionSettings;
 };
 
 type SessionFormProps = {
@@ -27,6 +34,7 @@ const defaultValues: SessionFormValues = {
   name: "",
   type: DEFAULT_SESSION_TYPE,
   status: "active",
+  settings: {},
 };
 
 export default function SessionForm({
@@ -49,6 +57,24 @@ export default function SessionForm({
     }));
   }
 
+  function updateType(type: SessionType) {
+    setValues((currentValues) => ({
+      ...currentValues,
+      type,
+      settings: normalizeSessionSettings(type, currentValues.settings),
+    }));
+  }
+
+  function updateTeamSize(teamSize: number) {
+    setValues((currentValues) => ({
+      ...currentValues,
+      settings: {
+        ...currentValues.settings,
+        teamSize: clampTeamSize(teamSize),
+      },
+    }));
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -66,9 +92,9 @@ export default function SessionForm({
     <form onSubmit={handleSubmit} className="rounded-xl bg-white p-6 shadow">
       <h2 className="text-xl font-semibold">{title}</h2>
 
-      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-4">
+      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-6">
         <input
-          className="rounded-lg border border-gray-300 px-4 py-2"
+          className="rounded-lg border border-gray-300 px-4 py-2 md:col-span-2"
           value={values.name}
           onChange={(event) => updateField("name", event.target.value)}
           placeholder="Session Name"
@@ -78,7 +104,7 @@ export default function SessionForm({
           className="rounded-lg border border-gray-300 px-4 py-2"
           value={values.type}
           onChange={(event) =>
-            updateField("type", event.target.value as SessionType)
+            updateType(event.target.value as SessionType)
           }
         >
           {SESSION_TYPES.map((sessionType) => (
@@ -87,6 +113,18 @@ export default function SessionForm({
             </option>
           ))}
         </select>
+
+        {values.type === "team_draw" && (
+          <input
+            className="rounded-lg border border-gray-300 px-4 py-2"
+            type="number"
+            min={MIN_TEAM_SIZE}
+            max={MAX_TEAM_SIZE}
+            value={values.settings.teamSize ?? DEFAULT_TEAM_SIZE}
+            onChange={(event) => updateTeamSize(Number(event.target.value))}
+            placeholder="Teamgröße"
+          />
+        )}
 
         <select
           className="rounded-lg border border-gray-300 px-4 py-2"

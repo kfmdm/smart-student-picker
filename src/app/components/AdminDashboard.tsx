@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Rocket } from "lucide-react";
-import { getSessionTypeLabel, type SessionType } from "@/lib/sessionTypes";
+import {
+    getSessionTypeLabel,
+    type SessionSettings,
+    type SessionType,
+} from "@/lib/sessionTypes";
 import SessionForm, {
     SessionFormValues,
     SessionStatus,
@@ -14,6 +18,7 @@ type Session = {
     uuid: string;
     name: string;
     type: SessionType;
+    settings?: SessionSettings;
     status: SessionStatus;
     created_at: string;
     updated_at: string;
@@ -103,6 +108,7 @@ export default function AdminDashboard() {
                             initialValues={{
                                 name: editingSession.name,
                                 type: editingSession.type,
+                                settings: editingSession.settings ?? {},
                                 status: editingSession.status,
                             }}
                             onSubmit={updateSession}
@@ -140,7 +146,14 @@ export default function AdminDashboard() {
                                             <td className="py-3">{session.name}</td>
 
                                             <td className="py-3">
-                                                {getSessionTypeLabel(session.type)}
+                                                <div>
+                                                    <p>{getSessionTypeLabel(session.type)}</p>
+                                                    {session.type === "team_draw" && (
+                                                        <p className="text-sm text-gray-500">
+                                                            {session.settings?.teamSize ?? 2}er-Teams
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </td>
 
                                             <td className="py-3">{session.status}</td>
@@ -224,6 +237,11 @@ export default function AdminDashboard() {
                                             <p className="mt-1">
                                                 {getSessionTypeLabel(session.type)}
                                             </p>
+                                            {session.type === "team_draw" && (
+                                                <p className="mt-1 text-sm text-gray-500">
+                                                    {session.settings?.teamSize ?? 2}er-Teams
+                                                </p>
+                                            )}
                                         </div>
 
                                         <div>

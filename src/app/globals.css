@@ -42,6 +42,16 @@ body {
     both;
 }
 
+.team-card-reveal {
+  animation: team-card-arrival 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28)
+    both;
+}
+
+.topic-flight {
+  animation: topic-flight-in 0.82s cubic-bezier(0.18, 0.89, 0.32, 1.28)
+    both;
+}
+
 @keyframes galaxy-drift {
   from {
     transform: translate3d(0, 0, 0);
@@ -153,5 +163,39 @@ body {
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes team-card-arrival {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 64px, 0) scale(0.88) rotate(-2deg);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -6px, 0) scale(1.03) rotate(1deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes topic-flight-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(-42vw, -18vh, 0) scale(0.74) rotate(-8deg);
+  }
+
+  68% {
+    opacity: 1;
+    transform: translate3d(12px, -8px, 0) scale(1.06) rotate(2deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0);
   }
 }

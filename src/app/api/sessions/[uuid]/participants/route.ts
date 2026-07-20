@@ -1,10 +1,17 @@
 import { prisma } from "@/lib/prisma";
+import {
+  isSessionType,
+  normalizeSessionSettings,
+  parseSessionSettings,
+  type SessionSettings,
+} from "@/lib/sessionTypes";
 import { NextResponse } from "next/server";
 
 type SessionRow = {
   uuid: string;
   name: string;
   type: string;
+  settings: SessionSettings | string | null;
   status: string;
 };
 
@@ -21,7 +28,7 @@ export async function GET(
   const { uuid } = await context.params;
 
   const sessions = await prisma.$queryRaw<SessionRow[]>`
-    SELECT uuid, name, type, status
+    SELECT uuid, name, type, settings, status
     FROM sessions
     WHERE uuid = ${uuid}
     LIMIT 1
@@ -45,7 +52,14 @@ export async function GET(
 
   return NextResponse.json(
     {
-      session,
+      session: {
+        ...session,
+        type: isSessionType(session.type) ? session.type : "single_draw",
+        settings: normalizeSessionSettings(
+          isSessionType(session.type) ? session.type : "single_draw",
+          parseSessionSettings(session.settings),
+        ),
+      },
       participants: participants.map((participant) => ({
         ...participant,
         created_at: participant.created_at

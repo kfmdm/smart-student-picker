@@ -1,0 +1,614 @@
+{"kind":"deck","id":"pr/jdyrdz","name":"Deck"}
+{"kind":"layout","layoutId":"6ec71ce1-b1c6-4469-914b-7ed1066534f9","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"a228adfb-4ade-4693-a44a-38669cf943f2","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/sarm1x","slide":1,"title":"MASTER-PROJEKT INFORMATIK · SOSE 2026","textShapes":135}
+{"kind":"shape","id":"sh/m58z25kb","slide":1,"bbox":[0,0,3179,310]}
+{"kind":"shape","id":"sh/twra5gbq","slide":1,"bbox":[0,310,3179,8]}
+{"kind":"textbox","id":"sh/4byhgn29","slide":1,"text":"MASTER-PROJEKT INFORMATIK · SOSE 2026","textPreview":"MASTER-PROJEKT INFORMATIK · SOSE 2026","textChars":37,"textLines":1,"bbox":[170,86,780,62]}
+{"kind":"textbox","id":"sh/b2hwfyxo","slide":1,"text":"Smart Student Picker","textPreview":"Smart Student Picker","textChars":20,"textLines":1,"bbox":[160,142,1920,128]}
+{"kind":"textbox","id":"sh/mhk3q5o7","slide":1,"text":"Faire digitale Aufgaben-, Team- und Themenverteilung für Lehrveranstaltungen","textPreview":"Faire digitale Aufgaben-, Team- und Themenverteilung für Lehrveranstaltungen","textChars":76,"textLines":1,"bbox":[1730,155,1170,74]}
+{"kind":"textbox","id":"sh/t83itgfm","slide":1,"text":"Fragestellung – Methode – Ergebnisse – Fazit","textPreview":"Fragestellung – Methode – Ergebnisse – Fazit","textChars":44,"textLines":1,"bbox":[170,356,980,46]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":1,"text":"Wie kann ein Vergabeprozess so gestaltet werden, dass Lehrende schnell handeln können und Studierende die Auslosung als nachvollziehbar und fair erleben?","textPreview":"Wie kann ein Vergabeprozess so gestaltet werden, dass Lehrende schnell handeln können und Studierende die Auslosung als nachvollziehbar u...","textChars":153,"textLines":1,"bbox":[170,414,2320,82]}
+{"kind":"shape","id":"sh/bat47y1k","slide":1,"bbox":[2550,360,460,108]}
+{"kind":"textbox","id":"sh/mp0bi9s3","slide":1,"text":"Prototyp-Stand\nDemo-Daten, keine Echtnamen","textPreview":"Prototyp-Stand | Demo-Daten, keine Echtnamen","textChars":42,"textLines":2,"bbox":[2574,377,412,70]}
+{"kind":"shape","id":"sh/4byhgn29","slide":1,"bbox":[150,560,880,850]}
+{"kind":"shape","id":"sh/twra5gbq","slide":1,"bbox":[150,560,18,850]}
+{"kind":"shape","id":"sh/m58z25kb","slide":1,"bbox":[192,598,58,58]}
+{"kind":"textbox","id":"sh/bq1oryts","slide":1,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[192,608,58,44]}
+{"kind":"textbox","id":"sh/4nap4r65","slide":1,"text":"Fragestellung","textPreview":"Fragestellung","textChars":13,"textLines":1,"bbox":[268,595,730,66]}
+{"kind":"shape","id":"sh/t83itgfm","slide":1,"bbox":[208,680,764,365]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":1,"bbox":[208,680,764,365]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":1,"bbox":[421.92,811.4,336.16,109.5]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":1,"bbox":[452.48,826,275.04,65.7]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":1,"bbox":[360.8,760.3,137.52,40.15]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":1,"text":"Ali","textPreview":"Ali","textChars":3,"textLines":1,"bbox":[368.8,772.3,121.52,21.9]}
+{"kind":"shape","id":"sh/4r65wjud","slide":1,"bbox":[544.16,745.7,137.52,40.15]}
+{"kind":"textbox","id":"sh/f6dcbulw","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[552.16,757.7,121.52,21.9]}
+{"kind":"shape","id":"sh/mlkjm1cf","slide":1,"bbox":[681.68,782.2,137.52,40.15]}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[689.68,794.2,121.52,21.9]}
+{"kind":"shape","id":"sh/4zidonyd","slide":1,"bbox":[421.92,920.9,137.52,40.15]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[429.92,932.9,121.52,21.9]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":1,"bbox":[643.48,909.95,137.52,40.15]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":1,"text":"Sara","textPreview":"Sara","textChars":4,"textLines":1,"bbox":[651.48,921.95,121.52,21.9]}
+{"kind":"textbox","id":"sh/83itgfml","slide":1,"text":"Manuell: Lose, Listen, Bauchgefühl","textPreview":"Manuell: Lose, Listen, Bauchgefühl","textChars":34,"textLines":1,"bbox":[244,971,692,40]}
+{"kind":"textbox","id":"sh/i5sneloj","slide":1,"text":"Problem im Lehralltag","textPreview":"Problem im Lehralltag","textChars":21,"textLines":1,"bbox":[208,1084,764,44]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":1,"text":"• Manuelle Verteilung ist langsam und schlecht skalierbar.\n• Fairness ist schwer sichtbar: Wer hatte welche Chance?\n• Teams und Themen brauchen nach der Auslosung oft manuelle Korrektur.","textPreview":"• Manuelle Verteilung ist langsam und schlecht skalierbar. | • Fairness ist schwer sichtbar: Wer hatte welche Chance? | • Teams und Theme...","textChars":186,"textLines":3,"bbox":[208,1140,764,138]}
+{"kind":"shape","id":"sh/0bi9s36h","slide":1,"bbox":[1100,560,880,850]}
+{"kind":"shape","id":"sh/pwb2hwfy","slide":1,"bbox":[1100,560,18,850]}
+{"kind":"shape","id":"sh/ed8v6psf","slide":1,"bbox":[1142,598,58,58]}
+{"kind":"textbox","id":"sh/7y1kre1w","slide":1,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1142,608,58,44]}
+{"kind":"textbox","id":"sh/wjudg7ad","slide":1,"text":"Methode","textPreview":"Methode","textChars":7,"textLines":1,"bbox":[1218,595,730,66]}
+{"kind":"shape","id":"sh/p4r65wju","slide":1,"bbox":[1158,690,764,170]}
+{"kind":"shape","id":"sh/ih4byhgn","slide":1,"bbox":[1180,712,54,54]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":1,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[1180,721,54,34]}
+{"kind":"textbox","id":"sh/val87ed8","slide":1,"text":"Session erstellen","textPreview":"Session erstellen","textChars":17,"textLines":1,"bbox":[1250,714,652,40]}
+{"kind":"textbox","id":"sh/6psfil0r","slide":1,"text":"Lehrende wählen Modus und optional Teamgröße.","textPreview":"Lehrende wählen Modus und optional Teamgröße.","textChars":45,"textLines":1,"bbox":[1250,762,652,76]}
+{"kind":"shape","id":"sh/dcbulwva","slide":1,"bbox":[1158,880,764,170]}
+{"kind":"shape","id":"sh/kre1w7mp","slide":1,"bbox":[1180,902,54,54]}
+{"kind":"textbox","id":"sh/vixczed8","slide":1,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1180,911,54,34]}
+{"kind":"textbox","id":"sh/2x4nap4r","slide":1,"text":"QR-Code teilen","textPreview":"QR-Code teilen","textChars":14,"textLines":1,"bbox":[1250,904,652,40]}
+{"kind":"textbox","id":"sh/donyd0z6","slide":1,"text":"Studierende melden sich ohne Account mit Demo-Namen an.","textPreview":"Studierende melden sich ohne Account mit Demo-Namen an.","textChars":55,"textLines":1,"bbox":[1250,952,652,76]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":1,"bbox":[1158,1070,764,170]}
+{"kind":"shape","id":"sh/vu9knih4","slide":1,"bbox":[1180,1092,54,54]}
+{"kind":"textbox","id":"sh/29gr2p8n","slide":1,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1180,1101,54,34]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":1,"text":"Live-Auslosung","textPreview":"Live-Auslosung","textChars":14,"textLines":1,"bbox":[1250,1094,652,40]}
+{"kind":"textbox","id":"sh/1032lszq","slide":1,"text":"Algorithmus verteilt Personen und Themen sichtbar auf der Bühne.","textPreview":"Algorithmus verteilt Personen und Themen sichtbar auf der Bühne.","textChars":64,"textLines":1,"bbox":[1250,1142,652,76]}
+{"kind":"textbox","id":"sh/u9knih4b","slide":1,"text":"Implementiert als Web-Prototyp mit Next.js, API-Routen, MariaDB/Prisma und live aktualisierter Teilnehmerliste.","textPreview":"Implementiert als Web-Prototyp mit Next.js, API-Routen, MariaDB/Prisma und live aktualisierter Teilnehmerliste.","textChars":111,"textLines":1,"bbox":[1158,1268,764,75]}
+{"kind":"shape","id":"sh/judg7ads","slide":1,"bbox":[2050,560,880,850]}
+{"kind":"shape","id":"sh/c7u54zid","slide":1,"bbox":[2050,560,18,850]}
+{"kind":"shape","id":"sh/1orytsvu","slide":1,"bbox":[2092,598,58,58]}
+{"kind":"textbox","id":"sh/u18jqh0f","slide":1,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[2092,608,58,44]}
+{"kind":"textbox","id":"sh/jm1cfa9w","slide":1,"text":"Ergebnisse","textPreview":"Ergebnisse","textChars":10,"textLines":1,"bbox":[2168,595,730,66]}
+{"kind":"shape","id":"sh/cvixczed","slide":1,"bbox":[2108,690,764,290]}
+{"kind":"shape","id":"sh/5gbq1ory","slide":1,"bbox":[2108,690,764,58]}
+{"kind":"shape","id":"sh/90je9cvi","slide":1,"bbox":[2132,710,18,18]}
+{"kind":"shape","id":"sh/gfmlkjm1","slide":1,"bbox":[2168,710,18,18]}
+{"kind":"shape","id":"sh/rytsvu9k","slide":1,"bbox":[2204,710,18,18]}
+{"kind":"textbox","id":"sh/yd0z6103","slide":1,"text":"Einzelauslosung","textPreview":"Einzelauslosung","textChars":15,"textLines":1,"bbox":[2243,704,604,34]}
+{"kind":"shape","id":"sh/9s36hcrm","slide":1,"bbox":[2128,766,724,194]}
+{"kind":"shape","id":"sh/g7adsji5","slide":1,"bbox":[2147,797,5,5]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":1,"bbox":[2184,850,2,2]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":1,"bbox":[2221,903,2,2]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":1,"bbox":[2258,774,2,2]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":1,"bbox":[2295,827,2,2]}
+{"kind":"shape","id":"sh/adsji5sn","slide":1,"bbox":[2332,880,3,3]}
+{"kind":"shape","id":"sh/3ylc7u54","slide":1,"bbox":[2369,933,2,2]}
+{"kind":"shape","id":"sh/sji5snel","slide":1,"bbox":[2406,804,2,2]}
+{"kind":"shape","id":"sh/h4byhgn2","slide":1,"bbox":[2443,857,2,2]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":1,"bbox":[2480,910,2,2]}
+{"kind":"shape","id":"sh/3m94fu18","slide":1,"bbox":[2517,781,3,3]}
+{"kind":"shape","id":"sh/s72x4nap","slide":1,"bbox":[2554,834,5,5]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":1,"bbox":[2591,887,2,2]}
+{"kind":"shape","id":"sh/a1gvy90j","slide":1,"bbox":[2628,940,2,2]}
+{"kind":"shape","id":"sh/zidonyd0","slide":1,"bbox":[2665,811,2,2]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":1,"bbox":[2702,864,3,3]}
+{"kind":"shape","id":"sh/at47y1kr","slide":1,"bbox":[2739,917,2,2]}
+{"kind":"shape","id":"sh/lkjm1cfa","slide":1,"bbox":[2776,788,2,2]}
+{"kind":"shape","id":"sh/szqtcj6t","slide":1,"bbox":[2813,841,2,2]}
+{"kind":"shape","id":"sh/32lszqtc","slide":1,"bbox":[2138,894,2,2]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":1,"bbox":[2175,947,3,3]}
+{"kind":"shape","id":"sh/l87ed8ba","slide":1,"bbox":[2212,818,2,2]}
+{"kind":"shape","id":"sh/sneloj2t","slide":1,"bbox":[2249,871,5,5]}
+{"kind":"shape","id":"sh/3q5o7qpg","slide":1,"bbox":[2286,924,2,2]}
+{"kind":"shape","id":"sh/e9cvixcz","slide":1,"bbox":[2323,795,2,2]}
+{"kind":"shape","id":"sh/o7qpg3ex","slide":1,"bbox":[2360,848,3,3]}
+{"kind":"shape","id":"sh/dsji5sne","slide":1,"bbox":[2397,901,2,2]}
+{"kind":"shape","id":"sh/61032lsz","slide":1,"bbox":[2434,772,2,2]}
+{"kind":"shape","id":"sh/vmtwra5g","slide":1,"bbox":[2471,825,2,2]}
+{"kind":"shape","id":"sh/oj2t83it","slide":1,"bbox":[2508,878,2,2]}
+{"kind":"shape","id":"sh/d4vmtwra","slide":1,"bbox":[2545,931,3,3]}
+{"kind":"shape","id":"sh/6dcbulwv","slide":1,"bbox":[2582,802,2,2]}
+{"kind":"shape","id":"sh/vy90je9c","slide":1,"bbox":[2619,855,2,2]}
+{"kind":"shape","id":"sh/onyd0z61","slide":1,"bbox":[2656,908,5,5]}
+{"kind":"shape","id":"sh/d8v6psfi","slide":1,"bbox":[2693,779,2,2]}
+{"kind":"shape","id":"sh/i5sneloj","slide":1,"bbox":[2730,832,3,3]}
+{"kind":"shape","id":"sh/7qpg3ex0","slide":1,"bbox":[2767,885,2,2]}
+{"kind":"shape","id":"sh/0bi9s36h","slide":1,"bbox":[2804,938,2,2]}
+{"kind":"shape","id":"sh/pwb2hwfy","slide":1,"bbox":[2129,809,2,2]}
+{"kind":"shape","id":"sh/ed8v6psf","slide":1,"bbox":[2166,862,2,2]}
+{"kind":"shape","id":"sh/7y1kre1w","slide":1,"bbox":[2203,915,3,3]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":1,"bbox":[2240,786,2,2]}
+{"kind":"shape","id":"sh/p4r65wju","slide":1,"bbox":[2277,839,2,2]}
+{"kind":"shape","id":"sh/ih4byhgn","slide":1,"bbox":[2314,892,2,2]}
+{"kind":"shape","id":"sh/72x4nap4","slide":1,"bbox":[2351,945,5,5]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":1,"bbox":[2388,816,3,3]}
+{"kind":"shape","id":"sh/4r65wjud","slide":1,"bbox":[2425,869,2,2]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":1,"bbox":[2462,922,2,2]}
+{"kind":"shape","id":"sh/mlkjm1cf","slide":1,"bbox":[2499,793,2,2]}
+{"kind":"shape","id":"sh/xkf6dcbu","slide":1,"bbox":[2536,846,2,2]}
+{"kind":"shape","id":"sh/4zidonyd","slide":1,"bbox":[2573,899,3,3]}
+{"kind":"shape","id":"sh/fepkzupw","slide":1,"bbox":[2610,770,2,2]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":1,"bbox":[2647,823,2,2]}
+{"kind":"shape","id":"sh/xobm58z2","slide":1,"bbox":[2684,876,2,2]}
+{"kind":"shape","id":"sh/83itgfml","slide":1,"bbox":[2721,929,2,2]}
+{"kind":"shape","id":"sh/4byhgn29","slide":1,"bbox":[2758,800,5,5]}
+{"kind":"shape","id":"sh/twra5gbq","slide":1,"bbox":[2795,853,2,2]}
+{"kind":"shape","id":"sh/m58z25kb","slide":1,"bbox":[2832,906,2,2]}
+{"kind":"shape","id":"sh/bq1oryts","slide":1,"bbox":[2157,777,2,2]}
+{"kind":"shape","id":"sh/4nap4r65","slide":1,"bbox":[2194,830,2,2]}
+{"kind":"shape","id":"sh/t83itgfm","slide":1,"bbox":[2231,883,3,3]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":1,"bbox":[2268,936,2,2]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":1,"bbox":[2305,807,2,2]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":1,"bbox":[2342,860,2,2]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":1,"bbox":[2379,913,2,2]}
+{"kind":"shape","id":"sh/ji5snelo","slide":1,"bbox":[2416,784,3,3]}
+{"kind":"shape","id":"sh/uxc3ylc7","slide":1,"bbox":[2453,837,5,5]}
+{"kind":"shape","id":"sh/1kre1w7m","slide":1,"bbox":[2490,890,2,2]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":1,"bbox":[2527,943,2,2]}
+{"kind":"shape","id":"sh/j6tovaho","slide":1,"bbox":[2564,814,2,2]}
+{"kind":"shape","id":"sh/ulwval87","slide":1,"bbox":[2601,867,3,3]}
+{"kind":"shape","id":"sh/1cfa9w3m","slide":1,"bbox":[2638,920,2,2]}
+{"kind":"shape","id":"sh/crmhk3q5","slide":1,"bbox":[2675,791,2,2]}
+{"kind":"shape","id":"sh/j2t83itg","slide":1,"bbox":[2712,844,2,2]}
+{"kind":"shape","id":"sh/qh0fepkz","slide":1,"bbox":[2268,880,444,72]}
+{"kind":"textbox","id":"sh/adsji5sn","slide":1,"text":"♛  Sara gewinnt","textPreview":"♛  Sara gewinnt","textChars":15,"textLines":1,"bbox":[2286,896,408,40]}
+{"kind":"shape","id":"sh/3ylc7u54","slide":1,"bbox":[2108,1010,764,290]}
+{"kind":"shape","id":"sh/sji5snel","slide":1,"bbox":[2108,1010,764,58]}
+{"kind":"shape","id":"sh/h4byhgn2","slide":1,"bbox":[2132,1030,18,18]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":1,"bbox":[2168,1030,18,18]}
+{"kind":"shape","id":"sh/3m94fu18","slide":1,"bbox":[2204,1030,18,18]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":1,"text":"Team-Auslosung","textPreview":"Team-Auslosung","textChars":14,"textLines":1,"bbox":[2243,1024,604,34]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":1,"bbox":[2128,1086,724,194]}
+{"kind":"shape","id":"sh/a1gvy90j","slide":1,"bbox":[2147,1117,5,5]}
+{"kind":"shape","id":"sh/zidonyd0","slide":1,"bbox":[2184,1170,2,2]}
+{"kind":"shape","id":"sh/90je9cvi","slide":1,"bbox":[2221,1223,2,2]}
+{"kind":"shape","id":"sh/gfmlkjm1","slide":1,"bbox":[2258,1094,2,2]}
+{"kind":"shape","id":"sh/rytsvu9k","slide":1,"bbox":[2295,1147,2,2]}
+{"kind":"shape","id":"sh/yd0z6103","slide":1,"bbox":[2332,1200,3,3]}
+{"kind":"shape","id":"sh/9s36hcrm","slide":1,"bbox":[2369,1253,2,2]}
+{"kind":"shape","id":"sh/g7adsji5","slide":1,"bbox":[2406,1124,2,2]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":1,"bbox":[2443,1177,2,2]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":1,"bbox":[2480,1230,2,2]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":1,"bbox":[2517,1101,3,3]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":1,"bbox":[2554,1154,5,5]}
+{"kind":"shape","id":"sh/cfa9w3m9","slide":1,"bbox":[2591,1207,2,2]}
+{"kind":"shape","id":"sh/1032lszq","slide":1,"bbox":[2628,1260,2,2]}
+{"kind":"shape","id":"sh/u9knih4b","slide":1,"bbox":[2665,1131,2,2]}
+{"kind":"shape","id":"sh/judg7ads","slide":1,"bbox":[2702,1184,3,3]}
+{"kind":"shape","id":"sh/c7u54zid","slide":1,"bbox":[2739,1237,2,2]}
+{"kind":"shape","id":"sh/1orytsvu","slide":1,"bbox":[2776,1108,2,2]}
+{"kind":"shape","id":"sh/u18jqh0f","slide":1,"bbox":[2813,1161,2,2]}
+{"kind":"shape","id":"sh/jm1cfa9w","slide":1,"bbox":[2138,1214,2,2]}
+{"kind":"shape","id":"sh/cvixczed","slide":1,"bbox":[2175,1267,3,3]}
+{"kind":"shape","id":"sh/5gbq1ory","slide":1,"bbox":[2212,1138,2,2]}
+{"kind":"shape","id":"sh/val87ed8","slide":1,"bbox":[2249,1191,5,5]}
+{"kind":"shape","id":"sh/6psfil0r","slide":1,"bbox":[2286,1244,2,2]}
+{"kind":"shape","id":"sh/dcbulwva","slide":1,"bbox":[2323,1115,2,2]}
+{"kind":"shape","id":"sh/kre1w7mp","slide":1,"bbox":[2360,1168,3,3]}
+{"kind":"shape","id":"sh/vixczed8","slide":1,"bbox":[2397,1221,2,2]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":1,"bbox":[2434,1092,2,2]}
+{"kind":"shape","id":"sh/donyd0z6","slide":1,"bbox":[2471,1145,2,2]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":1,"bbox":[2508,1198,2,2]}
+{"kind":"shape","id":"sh/vu9knih4","slide":1,"bbox":[2545,1251,3,3]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":1,"bbox":[2582,1122,2,2]}
+{"kind":"shape","id":"sh/m58z25kb","slide":1,"bbox":[2619,1175,2,2]}
+{"kind":"shape","id":"sh/bq1oryts","slide":1,"bbox":[2656,1228,5,5]}
+{"kind":"shape","id":"sh/4byhgn29","slide":1,"bbox":[2693,1099,2,2]}
+{"kind":"shape","id":"sh/twra5gbq","slide":1,"bbox":[2730,1152,3,3]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":1,"bbox":[2767,1205,2,2]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":1,"bbox":[2804,1258,2,2]}
+{"kind":"shape","id":"sh/4nap4r65","slide":1,"bbox":[2129,1129,2,2]}
+{"kind":"shape","id":"sh/t83itgfm","slide":1,"bbox":[2166,1182,2,2]}
+{"kind":"shape","id":"sh/mp0bi9s3","slide":1,"bbox":[2203,1235,3,3]}
+{"kind":"shape","id":"sh/bat47y1k","slide":1,"bbox":[2240,1106,2,2]}
+{"kind":"shape","id":"sh/1cfa9w3m","slide":1,"bbox":[2277,1159,2,2]}
+{"kind":"shape","id":"sh/crmhk3q5","slide":1,"bbox":[2314,1212,2,2]}
+{"kind":"shape","id":"sh/j6tovaho","slide":1,"bbox":[2351,1265,5,5]}
+{"kind":"shape","id":"sh/ulwval87","slide":1,"bbox":[2388,1136,3,3]}
+{"kind":"shape","id":"sh/1kre1w7m","slide":1,"bbox":[2425,1189,2,2]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":1,"bbox":[2462,1242,2,2]}
+{"kind":"shape","id":"sh/ji5snelo","slide":1,"bbox":[2499,1113,2,2]}
+{"kind":"shape","id":"sh/uxc3ylc7","slide":1,"bbox":[2536,1166,2,2]}
+{"kind":"shape","id":"sh/1w7mp0bi","slide":1,"bbox":[2573,1219,3,3]}
+{"kind":"shape","id":"sh/8bat47y1","slide":1,"bbox":[2610,1090,2,2]}
+{"kind":"shape","id":"sh/dcbulwva","slide":1,"bbox":[2647,1143,2,2]}
+{"kind":"shape","id":"sh/kre1w7mp","slide":1,"bbox":[2684,1196,2,2]}
+{"kind":"shape","id":"sh/val87ed8","slide":1,"bbox":[2721,1249,2,2]}
+{"kind":"shape","id":"sh/6psfil0r","slide":1,"bbox":[2758,1120,5,5]}
+{"kind":"shape","id":"sh/donyd0z6","slide":1,"bbox":[2795,1173,2,2]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":1,"bbox":[2832,1226,2,2]}
+{"kind":"shape","id":"sh/vixczed8","slide":1,"bbox":[2157,1097,2,2]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":1,"bbox":[2194,1150,2,2]}
+{"kind":"shape","id":"sh/d0z61032","slide":1,"bbox":[2231,1203,3,3]}
+{"kind":"shape","id":"sh/kf6dcbul","slide":1,"bbox":[2268,1256,2,2]}
+{"kind":"shape","id":"sh/y90je9cv","slide":1,"bbox":[2305,1127,2,2]}
+{"kind":"shape","id":"sh/nuxc3ylc","slide":1,"bbox":[2342,1180,2,2]}
+{"kind":"shape","id":"sh/gbq1oryt","slide":1,"bbox":[2379,1233,2,2]}
+{"kind":"shape","id":"sh/5wjudg7a","slide":1,"bbox":[2416,1104,3,3]}
+{"kind":"shape","id":"sh/yhgn29gr","slide":1,"bbox":[2453,1157,5,5]}
+{"kind":"shape","id":"sh/n29gr2p8","slide":1,"bbox":[2490,1210,2,2]}
+{"kind":"shape","id":"sh/gn29gr2p","slide":1,"bbox":[2527,1263,2,2]}
+{"kind":"shape","id":"sh/58z25kb6","slide":1,"bbox":[2564,1134,2,2]}
+{"kind":"shape","id":"sh/ytsvu9kn","slide":1,"bbox":[2601,1187,3,3]}
+{"kind":"shape","id":"sh/neloj2t8","slide":1,"bbox":[2638,1240,2,2]}
+{"kind":"shape","id":"sh/fepkzupw","slide":1,"bbox":[2675,1111,2,2]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":1,"bbox":[2712,1164,2,2]}
+{"kind":"shape","id":"sh/xkf6dcbu","slide":1,"bbox":[2198,1136,122,42]}
+{"kind":"textbox","id":"sh/4zidonyd","slide":1,"text":"🚀 Mina","textPreview":"🚀 Mina","textChars":7,"textLines":1,"bbox":[2206,1144,106,24]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":1,"bbox":[2353,1136,122,42]}
+{"kind":"textbox","id":"sh/mlkjm1cf","slide":1,"text":"🚀 Jonas","textPreview":"🚀 Jonas","textChars":8,"textLines":1,"bbox":[2361,1144,106,24]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":1,"bbox":[2508,1136,122,42]}
+{"kind":"textbox","id":"sh/4r65wjud","slide":1,"text":"🚀 Noah","textPreview":"🚀 Noah","textChars":7,"textLines":1,"bbox":[2516,1144,106,24]}
+{"kind":"shape","id":"sh/fu18jqh0","slide":1,"bbox":[2198,1222,122,42]}
+{"kind":"textbox","id":"sh/m94fu18j","slide":1,"text":"🚀 Lea","textPreview":"🚀 Lea","textChars":6,"textLines":1,"bbox":[2206,1230,106,24]}
+{"kind":"shape","id":"sh/0bi9s36h","slide":1,"bbox":[2353,1222,122,42]}
+{"kind":"textbox","id":"sh/pwb2hwfy","slide":1,"text":"🚀 Ali","textPreview":"🚀 Ali","textChars":6,"textLines":1,"bbox":[2361,1230,106,24]}
+{"kind":"shape","id":"sh/i5sneloj","slide":1,"bbox":[2508,1222,122,42]}
+{"kind":"textbox","id":"sh/7qpg3ex0","slide":1,"text":"🚀 Emma","textPreview":"🚀 Emma","textChars":7,"textLines":1,"bbox":[2516,1230,106,24]}
+{"kind":"shape","id":"sh/wjudg7ad","slide":1,"bbox":[2160,1126,316,104]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":1,"text":"Team 1","textPreview":"Team 1","textChars":6,"textLines":1,"bbox":[2174,1138,288,25]}
+{"kind":"shape","id":"sh/ed8v6psf","slide":1,"bbox":[2174,1171,288,20]}
+{"kind":"textbox","id":"sh/7y1kre1w","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[2182,1173,272,16]}
+{"kind":"shape","id":"sh/0nuxc3yl","slide":1,"bbox":[2174,1196,288,20]}
+{"kind":"textbox","id":"sh/p8nqxs72","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[2182,1198,272,16]}
+{"kind":"shape","id":"sh/lkjm1cfa","slide":1,"bbox":[2490,1126,316,104]}
+{"kind":"textbox","id":"sh/szqtcj6t","slide":1,"text":"Team 2","textPreview":"Team 2","textChars":6,"textLines":1,"bbox":[2504,1138,288,25]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":1,"bbox":[2504,1171,288,20]}
+{"kind":"textbox","id":"sh/at47y1kr","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[2512,1173,272,16]}
+{"kind":"shape","id":"sh/l87ed8ba","slide":1,"bbox":[2504,1196,288,20]}
+{"kind":"textbox","id":"sh/sneloj2t","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[2512,1198,272,16]}
+{"kind":"shape","id":"sh/32lszqtc","slide":1,"bbox":[2160,1262,316,104]}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":1,"text":"Team 3","textPreview":"Team 3","textChars":6,"textLines":1,"bbox":[2174,1274,288,25]}
+{"kind":"shape","id":"sh/lwval87e","slide":1,"bbox":[2174,1307,288,20]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[2182,1309,272,16]}
+{"kind":"shape","id":"sh/6dcbulwv","slide":1,"bbox":[2174,1332,288,20]}
+{"kind":"textbox","id":"sh/vy90je9c","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[2182,1334,272,16]}
+{"kind":"shape","id":"sh/oj2t83it","slide":1,"bbox":[2490,1262,316,104]}
+{"kind":"textbox","id":"sh/d4vmtwra","slide":1,"text":"Team 4","textPreview":"Team 4","textChars":6,"textLines":1,"bbox":[2504,1274,288,25]}
+{"kind":"shape","id":"sh/61032lsz","slide":1,"bbox":[2504,1307,288,20]}
+{"kind":"textbox","id":"sh/vmtwra5g","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[2512,1309,272,16]}
+{"kind":"shape","id":"sh/o7qpg3ex","slide":1,"bbox":[2504,1332,288,20]}
+{"kind":"textbox","id":"sh/dsji5sne","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[2512,1334,272,16]}
+{"kind":"textbox","id":"sh/6tovahoz","slide":1,"text":"Funktionierender Prototyp: QR-Anmeldung, Einzelauslosung mit Gewichtung, Team-Auslosung und Themenzuordnung.","textPreview":"Funktionierender Prototyp: QR-Anmeldung, Einzelauslosung mit Gewichtung, Team-Auslosung und Themenzuordnung.","textChars":108,"textLines":1,"bbox":[2108,1316,764,70]}
+{"kind":"shape","id":"sh/vahoza1g","slide":1,"bbox":[150,1500,1840,1110]}
+{"kind":"shape","id":"sh/r65wjudg","slide":1,"bbox":[150,1500,1840,1110]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":1,"bbox":[169,1531,5,5]}
+{"kind":"shape","id":"sh/9cvixcze","slide":1,"bbox":[206,1584,2,2]}
+{"kind":"shape","id":"sh/gr2p8nqx","slide":1,"bbox":[243,1637,2,2]}
+{"kind":"shape","id":"sh/nih4byhg","slide":1,"bbox":[280,1690,2,2]}
+{"kind":"shape","id":"sh/yxobm58z","slide":1,"bbox":[317,1743,2,2]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":1,"bbox":[354,1796,3,3]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":1,"bbox":[391,1849,2,2]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":1,"bbox":[428,1902,2,2]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":1,"bbox":[465,1955,2,2]}
+{"kind":"shape","id":"sh/sji5snel","slide":1,"bbox":[502,2008,2,2]}
+{"kind":"shape","id":"sh/h4byhgn2","slide":1,"bbox":[539,2061,3,3]}
+{"kind":"shape","id":"sh/adsji5sn","slide":1,"bbox":[576,2114,5,5]}
+{"kind":"shape","id":"sh/3ylc7u54","slide":1,"bbox":[613,2167,2,2]}
+{"kind":"shape","id":"sh/s72x4nap","slide":1,"bbox":[650,2220,2,2]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":1,"bbox":[687,2273,2,2]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":1,"bbox":[724,2326,3,3]}
+{"kind":"shape","id":"sh/3m94fu18","slide":1,"bbox":[761,2379,2,2]}
+{"kind":"shape","id":"sh/s36hcrmh","slide":1,"bbox":[798,2432,2,2]}
+{"kind":"shape","id":"sh/hoza1gvy","slide":1,"bbox":[835,2485,2,2]}
+{"kind":"shape","id":"sh/9cvixcze","slide":1,"bbox":[872,2538,2,2]}
+{"kind":"shape","id":"sh/gr2p8nqx","slide":1,"bbox":[909,2591,3,3]}
+{"kind":"shape","id":"sh/r65wjudg","slide":1,"bbox":[946,1546,2,2]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":1,"bbox":[983,1599,5,5]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":1,"bbox":[1020,1652,2,2]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":1,"bbox":[1057,1705,2,2]}
+{"kind":"shape","id":"sh/nih4byhg","slide":1,"bbox":[1094,1758,3,3]}
+{"kind":"shape","id":"sh/yxobm58z","slide":1,"bbox":[1131,1811,2,2]}
+{"kind":"shape","id":"sh/9s36hcrm","slide":1,"bbox":[1168,1864,2,2]}
+{"kind":"shape","id":"sh/g7adsji5","slide":1,"bbox":[1205,1917,2,2]}
+{"kind":"shape","id":"sh/ap4r65wj","slide":1,"bbox":[1242,1970,2,2]}
+{"kind":"shape","id":"sh/za1gvy90","slide":1,"bbox":[1279,2023,3,3]}
+{"kind":"shape","id":"sh/svu9knih","slide":1,"bbox":[1316,2076,2,2]}
+{"kind":"shape","id":"sh/hgn29gr2","slide":1,"bbox":[1353,2129,2,2]}
+{"kind":"shape","id":"sh/a1gvy90j","slide":1,"bbox":[1390,2182,5,5]}
+{"kind":"shape","id":"sh/zidonyd0","slide":1,"bbox":[1427,2235,2,2]}
+{"kind":"shape","id":"sh/s36hcrmh","slide":1,"bbox":[1464,2288,3,3]}
+{"kind":"shape","id":"sh/hoza1gvy","slide":1,"bbox":[1501,2341,2,2]}
+{"kind":"shape","id":"sh/a5gbq1or","slide":1,"bbox":[1538,2394,2,2]}
+{"kind":"shape","id":"sh/3m94fu18","slide":1,"bbox":[1575,2447,2,2]}
+{"kind":"shape","id":"sh/032lszqt","slide":1,"bbox":[1612,2500,2,2]}
+{"kind":"shape","id":"sh/tovahoza","slide":1,"bbox":[1649,2553,3,3]}
+{"kind":"shape","id":"sh/ixczed8v","slide":1,"bbox":[1686,1508,2,2]}
+{"kind":"shape","id":"sh/bi9s36hc","slide":1,"bbox":[1723,1561,2,2]}
+{"kind":"shape","id":"sh/0fepkzup","slide":1,"bbox":[1760,1614,2,2]}
+{"kind":"shape","id":"sh/p0bi9s36","slide":1,"bbox":[1797,1667,5,5]}
+{"kind":"shape","id":"sh/i9s36hcr","slide":1,"bbox":[1834,1720,3,3]}
+{"kind":"shape","id":"sh/bulwval8","slide":1,"bbox":[1871,1773,2,2]}
+{"kind":"shape","id":"sh/0je9cvix","slide":1,"bbox":[1908,1826,2,2]}
+{"kind":"shape","id":"sh/t47y1kre","slide":1,"bbox":[1945,1879,2,2]}
+{"kind":"shape","id":"sh/zqtcj6to","slide":1,"bbox":[154,1932,2,2]}
+{"kind":"shape","id":"sh/65wjudg7","slide":1,"bbox":[191,1985,3,3]}
+{"kind":"shape","id":"sh/hwfyxobm","slide":1,"bbox":[228,2038,2,2]}
+{"kind":"shape","id":"sh/obm58z25","slide":1,"bbox":[265,2091,2,2]}
+{"kind":"shape","id":"sh/zed8v6ps","slide":1,"bbox":[302,2144,2,2]}
+{"kind":"shape","id":"sh/6xkf6dcb","slide":1,"bbox":[339,2197,2,2]}
+{"kind":"shape","id":"sh/hk3q5o7q","slide":1,"bbox":[376,2250,5,5]}
+{"kind":"shape","id":"sh/oza1gvy9","slide":1,"bbox":[413,2303,2,2]}
+{"kind":"shape","id":"sh/z61032ls","slide":1,"bbox":[450,2356,2,2]}
+{"kind":"shape","id":"sh/al87ed8b","slide":1,"bbox":[487,2409,2,2]}
+{"kind":"shape","id":"sh/ih4byhgn","slide":1,"bbox":[524,2462,2,2]}
+{"kind":"shape","id":"sh/72x4nap4","slide":1,"bbox":[561,2515,3,3]}
+{"kind":"shape","id":"sh/0nuxc3yl","slide":1,"bbox":[598,2568,2,2]}
+{"kind":"shape","id":"sh/p8nqxs72","slide":1,"bbox":[635,1523,2,2]}
+{"kind":"shape","id":"sh/itgfmlkj","slide":1,"bbox":[672,1576,2,2]}
+{"kind":"shape","id":"sh/7ed8bat4","slide":1,"bbox":[709,1629,2,2]}
+{"kind":"shape","id":"sh/0z61032l","slide":1,"bbox":[746,1682,3,3]}
+{"kind":"shape","id":"sh/pkzupwb2","slide":1,"bbox":[783,1735,5,5]}
+{"kind":"shape","id":"sh/i5sneloj","slide":1,"bbox":[820,1788,2,2]}
+{"kind":"shape","id":"sh/7qpg3ex0","slide":1,"bbox":[857,1841,2,2]}
+{"kind":"shape","id":"sh/xobm58z2","slide":1,"bbox":[894,1894,2,2]}
+{"kind":"shape","id":"sh/83itgfml","slide":1,"bbox":[931,1947,3,3]}
+{"kind":"shape","id":"sh/fil0rqd4","slide":1,"bbox":[968,2000,2,2]}
+{"kind":"shape","id":"sh/qxs72x4n","slide":1,"bbox":[1005,2053,2,2]}
+{"kind":"shape","id":"sh/x0nuxc3y","slide":1,"bbox":[1042,2106,2,2]}
+{"kind":"shape","id":"sh/4fu18jqh","slide":1,"bbox":[220,1550,122,42]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":1,"text":"🚀 Mina","textPreview":"🚀 Mina","textChars":7,"textLines":1,"bbox":[228,1558,106,24]}
+{"kind":"shape","id":"sh/m94fu18j","slide":1,"bbox":[375,1550,122,42]}
+{"kind":"textbox","id":"sh/xc3ylc7u","slide":1,"text":"🚀 Jonas","textPreview":"🚀 Jonas","textChars":8,"textLines":1,"bbox":[383,1558,106,24]}
+{"kind":"shape","id":"sh/4r65wjud","slide":1,"bbox":[530,1550,122,42]}
+{"kind":"textbox","id":"sh/cvixczed","slide":1,"text":"🚀 Noah","textPreview":"🚀 Noah","textChars":7,"textLines":1,"bbox":[538,1558,106,24]}
+{"kind":"shape","id":"sh/5gbq1ory","slide":1,"bbox":[220,1636,122,42]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":1,"text":"🚀 Lea","textPreview":"🚀 Lea","textChars":6,"textLines":1,"bbox":[228,1644,106,24]}
+{"kind":"shape","id":"sh/nap4r65w","slide":1,"bbox":[375,1636,122,42]}
+{"kind":"textbox","id":"sh/cj6tovah","slide":1,"text":"🚀 Ali","textPreview":"🚀 Ali","textChars":6,"textLines":1,"bbox":[383,1644,106,24]}
+{"kind":"shape","id":"sh/54zidony","slide":1,"bbox":[530,1636,122,42]}
+{"kind":"textbox","id":"sh/udg7adsj","slide":1,"text":"🚀 Emma","textPreview":"🚀 Emma","textChars":7,"textLines":1,"bbox":[538,1644,106,24]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":1,"text":"Live-Bühne als zentraler Blickfang","textPreview":"Live-Bühne als zentraler Blickfang","textChars":34,"textLines":1,"bbox":[205,1554,830,58]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":1,"text":"Teilnehmende werden in Echtzeit sichtbar. Beim Auslosen bewegt sich die Liste; Ergebnis oder Teams werden groß und präsent dargestellt.","textPreview":"Teilnehmende werden in Echtzeit sichtbar. Beim Auslosen bewegt sich die Liste; Ergebnis oder Teams werden groß und präsent dargestellt.","textChars":135,"textLines":1,"bbox":[205,1620,1180,78]}
+{"kind":"shape","id":"sh/1032lszq","slide":1,"bbox":[300,1785,430,190]}
+{"kind":"textbox","id":"sh/r2p8nqxs","slide":1,"text":"Team 1","textPreview":"Team 1","textChars":6,"textLines":1,"bbox":[314,1797,402,25]}
+{"kind":"shape","id":"sh/2hwfyxob","slide":1,"bbox":[314,1827,402,25]}
+{"kind":"textbox","id":"sh/94fu18jq","slide":1,"text":"Graphen","textPreview":"Graphen","textChars":7,"textLines":1,"bbox":[318,1831,394,18]}
+{"kind":"shape","id":"sh/kjm1cfa9","slide":1,"bbox":[314,1858,402,20]}
+{"kind":"textbox","id":"sh/ra5gbq1o","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[322,1860,386,16]}
+{"kind":"shape","id":"sh/2p8nqxs7","slide":1,"bbox":[314,1883,402,20]}
+{"kind":"textbox","id":"sh/9gr2p8nq","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[322,1885,386,16]}
+{"kind":"shape","id":"sh/gvy90je9","slide":1,"bbox":[790,1785,430,190]}
+{"kind":"textbox","id":"sh/re1w7mp0","slide":1,"text":"Team 2","textPreview":"Team 2","textChars":6,"textLines":1,"bbox":[804,1797,402,25]}
+{"kind":"shape","id":"sh/2t83itgf","slide":1,"bbox":[804,1827,402,25]}
+{"kind":"textbox","id":"sh/qpg3ex0n","slide":1,"text":"Datenbanken","textPreview":"Datenbanken","textChars":11,"textLines":1,"bbox":[808,1831,394,18]}
+{"kind":"shape","id":"sh/fa9w3m94","slide":1,"bbox":[804,1858,402,20]}
+{"kind":"textbox","id":"sh/8v6psfil","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[812,1860,386,16]}
+{"kind":"shape","id":"sh/xczed8v6","slide":1,"bbox":[804,1883,402,20]}
+{"kind":"textbox","id":"sh/qd4vmtwr","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[812,1885,386,16]}
+{"kind":"shape","id":"sh/fyxobm58","slide":1,"bbox":[1280,1785,430,190]}
+{"kind":"textbox","id":"sh/8jqh0fep","slide":1,"text":"Team 3","textPreview":"Team 3","textChars":6,"textLines":1,"bbox":[1294,1797,402,25]}
+{"kind":"shape","id":"sh/x4nap4r6","slide":1,"bbox":[1294,1827,402,25]}
+{"kind":"textbox","id":"sh/q1orytsv","slide":1,"text":"Hashing","textPreview":"Hashing","textChars":7,"textLines":1,"bbox":[1298,1831,394,18]}
+{"kind":"shape","id":"sh/fmlkjm1c","slide":1,"bbox":[1294,1858,402,20]}
+{"kind":"textbox","id":"sh/5sneloj2","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[1302,1860,386,16]}
+{"kind":"shape","id":"sh/cbulwval","slide":1,"bbox":[1294,1883,402,20]}
+{"kind":"textbox","id":"sh/nqxs72x4","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[1302,1885,386,16]}
+{"kind":"shape","id":"sh/u54zidon","slide":1,"bbox":[300,2045,430,190]}
+{"kind":"textbox","id":"sh/5kb6xkf6","slide":1,"text":"Team 4","textPreview":"Team 4","textChars":6,"textLines":1,"bbox":[314,2057,402,25]}
+{"kind":"shape","id":"sh/czed8v6p","slide":1,"bbox":[314,2087,402,25]}
+{"kind":"textbox","id":"sh/neloj2t8","slide":1,"text":"Queues","textPreview":"Queues","textChars":6,"textLines":1,"bbox":[318,2091,394,18]}
+{"kind":"shape","id":"sh/ytsvu9kn","slide":1,"bbox":[314,2118,402,20]}
+{"kind":"textbox","id":"sh/58z25kb6","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[322,2120,386,16]}
+{"kind":"shape","id":"sh/gn29gr2p","slide":1,"bbox":[314,2143,402,20]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[322,2145,386,16]}
+{"kind":"shape","id":"sh/p8nqxs72","slide":1,"bbox":[790,2045,430,190]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":1,"text":"Team 5","textPreview":"Team 5","textChars":6,"textLines":1,"bbox":[804,2057,402,25]}
+{"kind":"shape","id":"sh/72x4nap4","slide":1,"bbox":[804,2087,402,25]}
+{"kind":"textbox","id":"sh/0z61032l","slide":1,"text":"Security","textPreview":"Security","textChars":8,"textLines":1,"bbox":[808,2091,394,18]}
+{"kind":"shape","id":"sh/pkzupwb2","slide":1,"bbox":[804,2118,402,20]}
+{"kind":"textbox","id":"sh/itgfmlkj","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[812,2120,386,16]}
+{"kind":"shape","id":"sh/7ed8bat4","slide":1,"bbox":[804,2143,402,20]}
+{"kind":"textbox","id":"sh/0bi9s36h","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[812,2145,386,16]}
+{"kind":"shape","id":"sh/pwb2hwfy","slide":1,"bbox":[1280,2045,430,190]}
+{"kind":"textbox","id":"sh/fu18jqh0","slide":1,"text":"Team 6","textPreview":"Team 6","textChars":6,"textLines":1,"bbox":[1294,2057,402,25]}
+{"kind":"shape","id":"sh/m94fu18j","slide":1,"bbox":[1294,2087,402,25]}
+{"kind":"textbox","id":"sh/x0nuxc3y","slide":1,"text":"UX-Test","textPreview":"UX-Test","textChars":7,"textLines":1,"bbox":[1298,2091,394,18]}
+{"kind":"shape","id":"sh/4fu18jqh","slide":1,"bbox":[1294,2118,402,20]}
+{"kind":"textbox","id":"sh/fil0rqd4","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[1302,2120,386,16]}
+{"kind":"shape","id":"sh/qxs72x4n","slide":1,"bbox":[1294,2143,402,20]}
+{"kind":"textbox","id":"sh/xobm58z2","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[1302,2145,386,16]}
+{"kind":"shape","id":"sh/83itgfml","slide":1,"bbox":[350,2345,1440,120]}
+{"kind":"textbox","id":"sh/fepkzupw","slide":1,"text":"Teams können live neu ausgelost, Themen zufällig verteilt und Personen per Drag-and-drop verschoben werden.","textPreview":"Teams können live neu ausgelost, Themen zufällig verteilt und Personen per Drag-and-drop verschoben werden.","textChars":107,"textLines":1,"bbox":[390,2375,1360,52]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":1,"bbox":[2050,1500,880,510]}
+{"kind":"textbox","id":"sh/3ylc7u54","slide":1,"text":"Fairness-Modell","textPreview":"Fairness-Modell","textChars":15,"textLines":1,"bbox":[2082,1526,816,42]}
+{"kind":"textbox","id":"sh/adsji5sn","slide":1,"text":"Einzelauslosung","textPreview":"Einzelauslosung","textChars":15,"textLines":1,"bbox":[2086,1594,260,34]}
+{"kind":"textbox","id":"sh/h4byhgn2","slide":1,"text":"P(Name i) = Gewicht i / Summe aller Gewichte","textPreview":"P(Name i) = Gewicht i / Summe aller Gewichte","textChars":44,"textLines":1,"bbox":[2086,1635,808,48]}
+{"kind":"textbox","id":"sh/sji5snel","slide":1,"text":"Team-Auslosung","textPreview":"Team-Auslosung","textChars":14,"textLines":1,"bbox":[2086,1714,260,34]}
+{"kind":"textbox","id":"sh/3m94fu18","slide":1,"text":"Shuffle → Chunks der Teamgröße → Einzelrest wird verteilt","textPreview":"Shuffle → Chunks der Teamgröße → Einzelrest wird verteilt","textChars":57,"textLines":1,"bbox":[2086,1755,808,48]}
+{"kind":"textbox","id":"sh/a5gbq1or","slide":1,"text":"Ziel: Jede Person wird nachvollziehbar genau einmal berücksichtigt; Gewichtung ist nur dort aktiv, wo sie didaktisch gewollt ist.","textPreview":"Ziel: Jede Person wird nachvollziehbar genau einmal berücksichtigt; Gewichtung ist nur dort aktiv, wo sie didaktisch gewollt ist.","textChars":129,"textLines":1,"bbox":[2086,1830,808,92]}
+{"kind":"shape","id":"sh/lszqtcj6","slide":1,"bbox":[2050,2050,880,560]}
+{"kind":"textbox","id":"sh/s72x4nap","slide":1,"text":"QR-Flow und Anmeldung","textPreview":"QR-Flow und Anmeldung","textChars":21,"textLines":1,"bbox":[2110,2100,760,48]}
+{"kind":"shape","id":"sh/zidonyd0","slide":1,"bbox":[2107,2187,256,256]}
+{"kind":"shape","id":"sh/a1gvy90j","slide":1,"bbox":[2125,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/kre1w7mp","slide":1,"bbox":[2149.44,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/dcbulwva","slide":1,"bbox":[2173.89,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/6psfil0r","slide":1,"bbox":[2271.67,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/val87ed8","slide":1,"bbox":[2296.11,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/k3q5o7qp","slide":1,"bbox":[2320.56,2205,20.04,20.04]}
+{"kind":"shape","id":"sh/donyd0z6","slide":1,"bbox":[2125,2229.44,20.04,20.04]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":1,"bbox":[2173.89,2229.44,20.04,20.04]}
+{"kind":"shape","id":"sh/vixczed8","slide":1,"bbox":[2222.78,2229.44,20.04,20.04]}
+{"kind":"shape","id":"sh/kf6dcbul","slide":1,"bbox":[2271.67,2229.44,20.04,20.04]}
+{"kind":"shape","id":"sh/d0z61032","slide":1,"bbox":[2320.56,2229.44,20.04,20.04]}
+{"kind":"shape","id":"sh/dsji5sne","slide":1,"bbox":[2125,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/o7qpg3ex","slide":1,"bbox":[2149.44,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/vmtwra5g","slide":1,"bbox":[2173.89,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/61032lsz","slide":1,"bbox":[2247.22,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/d4vmtwra","slide":1,"bbox":[2271.67,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/oj2t83it","slide":1,"bbox":[2296.11,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/vy90je9c","slide":1,"bbox":[2320.56,2253.89,20.04,20.04]}
+{"kind":"shape","id":"sh/6dcbulwv","slide":1,"bbox":[2198.33,2278.33,20.04,20.04]}
+{"kind":"shape","id":"sh/d8v6psfi","slide":1,"bbox":[2247.22,2278.33,20.04,20.04]}
+{"kind":"shape","id":"sh/onyd0z61","slide":1,"bbox":[2149.44,2302.78,20.04,20.04]}
+{"kind":"shape","id":"sh/ylc7u54z","slide":1,"bbox":[2173.89,2302.78,20.04,20.04]}
+{"kind":"shape","id":"sh/r65wjudg","slide":1,"bbox":[2222.78,2302.78,20.04,20.04]}
+{"kind":"shape","id":"sh/gr2p8nqx","slide":1,"bbox":[2296.11,2302.78,20.04,20.04]}
+{"kind":"shape","id":"sh/9cvixcze","slide":1,"bbox":[2125,2327.22,20.04,20.04]}
+{"kind":"shape","id":"sh/yxobm58z","slide":1,"bbox":[2198.33,2327.22,20.04,20.04]}
+{"kind":"shape","id":"sh/nih4byhg","slide":1,"bbox":[2222.78,2327.22,20.04,20.04]}
+{"kind":"shape","id":"sh/g3ex0nux","slide":1,"bbox":[2320.56,2327.22,20.04,20.04]}
+{"kind":"shape","id":"sh/5o7qpg3e","slide":1,"bbox":[2125,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/y1kre1w7","slide":1,"bbox":[2149.44,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/rmhk3q5o","slide":1,"bbox":[2173.89,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/bq1oryts","slide":1,"bbox":[2247.22,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/m58z25kb","slide":1,"bbox":[2271.67,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/twra5gbq","slide":1,"bbox":[2320.56,2351.67,20.04,20.04]}
+{"kind":"shape","id":"sh/4byhgn29","slide":1,"bbox":[2125,2376.11,20.04,20.04]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":1,"bbox":[2173.89,2376.11,20.04,20.04]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":1,"bbox":[2222.78,2376.11,20.04,20.04]}
+{"kind":"shape","id":"sh/t83itgfm","slide":1,"bbox":[2271.67,2376.11,20.04,20.04]}
+{"kind":"shape","id":"sh/4nap4r65","slide":1,"bbox":[2296.11,2376.11,20.04,20.04]}
+{"kind":"shape","id":"sh/bat47y1k","slide":1,"bbox":[2125,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/mp0bi9s3","slide":1,"bbox":[2149.44,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/szqtcj6t","slide":1,"bbox":[2173.89,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/lkjm1cfa","slide":1,"bbox":[2222.78,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/at47y1kr","slide":1,"bbox":[2296.11,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/3ex0nuxc","slide":1,"bbox":[2320.56,2400.56,20.04,20.04]}
+{"kind":"shape","id":"sh/sneloj2t","slide":1,"bbox":[2430,2176,300,365]}
+{"kind":"shape","id":"sh/l87ed8ba","slide":1,"bbox":[2448,2204,264,309]}
+{"kind":"textbox","id":"sh/ahoza1gv","slide":1,"text":"Zur Session anmelden","textPreview":"Zur Session anmelden","textChars":20,"textLines":1,"bbox":[2468,2240,224,50]}
+{"kind":"shape","id":"sh/32lszqtc","slide":1,"bbox":[2476,2320,208,54]}
+{"kind":"textbox","id":"sh/wb2hwfyx","slide":1,"text":"Demo-Name","textPreview":"Demo-Name","textChars":9,"textLines":1,"bbox":[2492,2334,176,24]}
+{"kind":"shape","id":"sh/lwval87e","slide":1,"bbox":[2476,2398,208,54]}
+{"kind":"textbox","id":"sh/pkzupwb2","slide":1,"text":"Anmelden","textPreview":"Anmelden","textChars":8,"textLines":1,"bbox":[2476,2413,208,24]}
+{"kind":"textbox","id":"sh/0z61032l","slide":1,"text":"Der QR-Code senkt die Einstiegshürde: keine Account-Erstellung, keine manuelle Erfassung, sofortige Anzeige auf der Live-Seite.","textPreview":"Der QR-Code senkt die Einstiegshürde: keine Account-Erstellung, keine manuelle Erfassung, sofortige Anzeige auf der Live-Seite.","textChars":127,"textLines":1,"bbox":[2110,2558,760,70]}
+{"kind":"shape","id":"sh/7ed8bat4","slide":1,"bbox":[150,2700,1320,700]}
+{"kind":"shape","id":"sh/itgfmlkj","slide":1,"bbox":[150,2700,18,700]}
+{"kind":"shape","id":"sh/p8nqxs72","slide":1,"bbox":[192,2738,58,58]}
+{"kind":"textbox","id":"sh/0nuxc3yl","slide":1,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[192,2748,58,44]}
+{"kind":"textbox","id":"sh/72x4nap4","slide":1,"text":"Wissenschaftliche Reduktion","textPreview":"Wissenschaftliche Reduktion","textChars":27,"textLines":1,"bbox":[268,2735,1170,66]}
+{"kind":"textbox","id":"sh/ih4byhgn","slide":1,"text":"Kernidee","textPreview":"Kernidee","textChars":8,"textLines":1,"bbox":[220,2830,300,46]}
+{"kind":"textbox","id":"sh/p4r65wju","slide":1,"text":"Das Projekt übersetzt eine organisatorische Aufgabe in einen transparenten, reproduzierbar erklärbaren digitalen Ablauf.","textPreview":"Das Projekt übersetzt eine organisatorische Aufgabe in einen transparenten, reproduzierbar erklärbaren digitalen Ablauf.","textChars":120,"textLines":1,"bbox":[220,2892,1140,78]}
+{"kind":"textbox","id":"sh/wjudg7ad","slide":1,"text":"• Reduktion des Vergabeprozesses auf wenige verständliche Interaktionen.\n• Trennung der Modi: Einzelauslosung, Teams, Themen.\n• Nachvollziehbare Regeln statt spontaner manueller Entscheidung.","textPreview":"• Reduktion des Vergabeprozesses auf wenige verständliche Interaktionen. | • Trennung der Modi: Einzelauslosung, Teams, Themen. | • Nachv...","textChars":191,"textLines":3,"bbox":[220,3004,1120,141]}
+{"kind":"shape","id":"sh/uxc3ylc7","slide":1,"bbox":[1580,2700,1350,700]}
+{"kind":"shape","id":"sh/ji5snelo","slide":1,"bbox":[1580,2700,18,700]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":1,"bbox":[1622,2738,58,58]}
+{"kind":"textbox","id":"sh/1kre1w7m","slide":1,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1622,2748,58,44]}
+{"kind":"textbox","id":"sh/ulwval87","slide":1,"text":"Fazit","textPreview":"Fazit","textChars":5,"textLines":1,"bbox":[1698,2735,1200,66]}
+{"kind":"shape","id":"sh/j6tovaho","slide":1,"bbox":[1655,2830,535,160]}
+{"kind":"textbox","id":"sh/crmhk3q5","slide":1,"text":"fair","textPreview":"fair","textChars":4,"textLines":1,"bbox":[1683,2854,480,38]}
+{"kind":"textbox","id":"sh/1cfa9w3m","slide":1,"text":"Gewichtung und Zufall sind explizit sichtbar.","textPreview":"Gewichtung und Zufall sind explizit sichtbar.","textChars":45,"textLines":1,"bbox":[1683,2902,480,58]}
+{"kind":"shape","id":"sh/qh0fepkz","slide":1,"bbox":[2260,2830,535,160]}
+{"kind":"textbox","id":"sh/j2t83itg","slide":1,"text":"schnell","textPreview":"schnell","textChars":7,"textLines":1,"bbox":[2288,2854,480,38]}
+{"kind":"textbox","id":"sh/judg7ads","slide":1,"text":"QR-Code ersetzt mündliche/manuelle Erfassung.","textPreview":"QR-Code ersetzt mündliche/manuelle Erfassung.","textChars":45,"textLines":1,"bbox":[2288,2902,480,58]}
+{"kind":"shape","id":"sh/u9knih4b","slide":1,"bbox":[1655,3050,535,160]}
+{"kind":"textbox","id":"sh/1032lszq","slide":1,"text":"transparent","textPreview":"transparent","textChars":11,"textLines":1,"bbox":[1683,3074,480,38]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":1,"text":"Die Live-Bühne zeigt Prozess und Ergebnis.","textPreview":"Die Live-Bühne zeigt Prozess und Ergebnis.","textChars":42,"textLines":1,"bbox":[1683,3122,480,58]}
+{"kind":"shape","id":"sh/jm1cfa9w","slide":1,"bbox":[2260,3050,535,160]}
+{"kind":"textbox","id":"sh/u18jqh0f","slide":1,"text":"erweiterbar","textPreview":"erweiterbar","textChars":11,"textLines":1,"bbox":[2288,3074,480,38]}
+{"kind":"textbox","id":"sh/1orytsvu","slide":1,"text":"Session-Typen können modular ergänzt werden.","textPreview":"Session-Typen können modular ergänzt werden.","textChars":44,"textLines":1,"bbox":[2288,3122,480,58]}
+{"kind":"shape","id":"sh/c7u54zid","slide":1,"bbox":[150,3510,2780,445]}
+{"kind":"textbox","id":"sh/nap4r65w","slide":1,"text":"Nächste Schritte","textPreview":"Nächste Schritte","textChars":16,"textLines":1,"bbox":[220,3576,520,52]}
+{"kind":"textbox","id":"sh/upwb2hwf","slide":1,"text":"• Weitere Session-Typen definieren, ohne die Live-Bühne pro Modus neu bauen zu müssen.\n• Optional: Evaluation mit Lehrenden und Studierenden zur wahrgenommenen Fairness.\n• Optional: Ergebnisprotokoll oder Export, falls eine Lehrveranstaltung dauerhafte Nachweise braucht.","textPreview":"• Weitere Session-Typen definieren, ohne die Live-Bühne pro Modus neu bauen zu müssen. | • Optional: Evaluation mit Lehrenden und Studier...","textChars":271,"textLines":3,"bbox":[220,3650,1280,135]}
+{"kind":"shape","id":"sh/4r65wjud","slide":1,"bbox":[1640,3560,1180,350]}
+{"kind":"shape","id":"sh/xc3ylc7u","slide":1,"bbox":[1640,3560,1180,58]}
+{"kind":"shape","id":"sh/mlkjm1cf","slide":1,"bbox":[1664,3580,18,18]}
+{"kind":"shape","id":"sh/f6dcbulw","slide":1,"bbox":[1700,3580,18,18]}
+{"kind":"shape","id":"sh/4zidonyd","slide":1,"bbox":[1736,3580,18,18]}
+{"kind":"textbox","id":"sh/xkf6dcbu","slide":1,"text":"Themenzuordnung","textPreview":"Themenzuordnung","textChars":15,"textLines":1,"bbox":[1775,3574,1020,34]}
+{"kind":"shape","id":"sh/mtwra5gb","slide":1,"bbox":[1660,3636,1140,254]}
+{"kind":"shape","id":"sh/fepkzupw","slide":1,"bbox":[1679,3667,5,5]}
+{"kind":"shape","id":"sh/83itgfml","slide":1,"bbox":[1716,3720,2,2]}
+{"kind":"shape","id":"sh/xobm58z2","slide":1,"bbox":[1753,3773,2,2]}
+{"kind":"shape","id":"sh/m1cfa9w3","slide":1,"bbox":[1790,3826,2,2]}
+{"kind":"shape","id":"sh/bm58z25k","slide":1,"bbox":[1827,3637,2,2]}
+{"kind":"shape","id":"sh/47y1kre1","slide":1,"bbox":[1864,3690,3,3]}
+{"kind":"shape","id":"sh/tsvu9kni","slide":1,"bbox":[1901,3743,2,2]}
+{"kind":"shape","id":"sh/mp0bi9s3","slide":1,"bbox":[1938,3796,2,2]}
+{"kind":"shape","id":"sh/bat47y1k","slide":1,"bbox":[1975,3849,2,2]}
+{"kind":"shape","id":"sh/4vmtwra5","slide":1,"bbox":[2012,3660,2,2]}
+{"kind":"shape","id":"sh/tgfmlkjm","slide":1,"bbox":[2049,3713,3,3]}
+{"kind":"shape","id":"sh/mhk3q5o7","slide":1,"bbox":[2086,3766,5,5]}
+{"kind":"shape","id":"sh/b2hwfyxo","slide":1,"bbox":[2123,3819,2,2]}
+{"kind":"shape","id":"sh/18jqh0fe","slide":1,"bbox":[2160,3872,2,2]}
+{"kind":"shape","id":"sh/8nqxs72x","slide":1,"bbox":[2197,3683,2,2]}
+{"kind":"shape","id":"sh/j2t83itg","slide":1,"bbox":[2234,3736,3,3]}
+{"kind":"shape","id":"sh/qh0fepkz","slide":1,"bbox":[2271,3789,2,2]}
+{"kind":"shape","id":"sh/1w7mp0bi","slide":1,"bbox":[2308,3842,2,2]}
+{"kind":"shape","id":"sh/8bat47y1","slide":1,"bbox":[2345,3653,2,2]}
+{"kind":"shape","id":"sh/jqh0fepk","slide":1,"bbox":[2382,3706,2,2]}
+{"kind":"shape","id":"sh/q5o7qpg3","slide":1,"bbox":[2419,3759,3,3]}
+{"kind":"shape","id":"sh/1kre1w7m","slide":1,"bbox":[2456,3812,2,2]}
+{"kind":"shape","id":"sh/c3ylc7u5","slide":1,"bbox":[2493,3865,5,5]}
+{"kind":"shape","id":"sh/orytsvu9","slide":1,"bbox":[2530,3676,2,2]}
+{"kind":"shape","id":"sh/hcrmhk3q","slide":1,"bbox":[2567,3729,2,2]}
+{"kind":"shape","id":"sh/al87ed8b","slide":1,"bbox":[2604,3782,3,3]}
+{"kind":"shape","id":"sh/z61032ls","slide":1,"bbox":[2641,3835,2,2]}
+{"kind":"shape","id":"sh/sfil0rqd","slide":1,"bbox":[2678,3646,2,2]}
+{"kind":"shape","id":"sh/h0fepkzu","slide":1,"bbox":[2715,3699,2,2]}
+{"kind":"shape","id":"sh/a9w3m94f","slide":1,"bbox":[2752,3752,2,2]}
+{"kind":"shape","id":"sh/zupwb2hw","slide":1,"bbox":[1661,3805,3,3]}
+{"kind":"shape","id":"sh/obm58z25","slide":1,"bbox":[1698,3858,2,2]}
+{"kind":"shape","id":"sh/hwfyxobm","slide":1,"bbox":[1735,3669,2,2]}
+{"kind":"shape","id":"sh/7u54zido","slide":1,"bbox":[1772,3722,5,5]}
+{"kind":"shape","id":"sh/ed8bat47","slide":1,"bbox":[1809,3775,2,2]}
+{"kind":"shape","id":"sh/l0rqd4vm","slide":1,"bbox":[1846,3828,3,3]}
+{"kind":"shape","id":"sh/wfyxobm5","slide":1,"bbox":[1883,3639,2,2]}
+{"kind":"shape","id":"sh/36hcrmhk","slide":1,"bbox":[1920,3692,2,2]}
+{"kind":"shape","id":"sh/eloj2t83","slide":1,"bbox":[1957,3745,2,2]}
+{"kind":"shape","id":"sh/lc7u54zi","slide":1,"bbox":[1994,3798,2,2]}
+{"kind":"shape","id":"sh/wra5gbq1","slide":1,"bbox":[2031,3851,3,3]}
+{"kind":"shape","id":"sh/7adsji5s","slide":1,"bbox":[2068,3662,2,2]}
+{"kind":"shape","id":"sh/epkzupwb","slide":1,"bbox":[2105,3715,2,2]}
+{"kind":"shape","id":"sh/ex0nuxc3","slide":1,"bbox":[2142,3768,2,2]}
+{"kind":"shape","id":"sh/3itgfmlk","slide":1,"bbox":[2179,3821,5,5]}
+{"kind":"shape","id":"sh/w3m94fu1","slide":1,"bbox":[2216,3874,3,3]}
+{"kind":"shape","id":"sh/loj2t83i","slide":1,"bbox":[2253,3685,2,2]}
+{"kind":"shape","id":"sh/e9cvixcz","slide":1,"bbox":[2290,3738,2,2]}
+{"kind":"shape","id":"sh/3q5o7qpg","slide":1,"bbox":[2327,3791,2,2]}
+{"kind":"shape","id":"sh/wb2hwfyx","slide":1,"bbox":[2364,3844,2,2]}
+{"kind":"shape","id":"sh/lwval87e","slide":1,"bbox":[2401,3655,3,3]}
+{"kind":"shape","id":"sh/ahoza1gv","slide":1,"bbox":[2438,3708,2,2]}
+{"kind":"shape","id":"sh/32lszqtc","slide":1,"bbox":[2475,3761,2,2]}
+{"kind":"shape","id":"sh/t47y1kre","slide":1,"bbox":[2512,3814,2,2]}
+{"kind":"shape","id":"sh/0je9cvix","slide":1,"bbox":[2549,3867,2,2]}
+{"kind":"shape","id":"sh/byhgn29g","slide":1,"bbox":[2586,3678,5,5]}
+{"kind":"shape","id":"sh/idonyd0z","slide":1,"bbox":[2623,3731,2,2]}
+{"kind":"shape","id":"sh/tcj6tova","slide":1,"bbox":[2660,3784,2,2]}
+{"kind":"shape","id":"sh/0rqd4vmt","slide":1,"bbox":[2697,3837,2,2]}
+{"kind":"shape","id":"sh/b6xkf6dc","slide":1,"bbox":[2734,3648,2,2]}
+{"kind":"shape","id":"sh/il0rqd4v","slide":1,"bbox":[2771,3701,3,3]}
+{"kind":"shape","id":"sh/tovahoza","slide":1,"bbox":[1680,3754,2,2]}
+{"kind":"shape","id":"sh/032lszqt","slide":1,"bbox":[1717,3807,2,2]}
+{"kind":"shape","id":"sh/czed8v6p","slide":1,"bbox":[1754,3860,2,2]}
+{"kind":"shape","id":"sh/5kb6xkf6","slide":1,"bbox":[1791,3671,2,2]}
+{"kind":"shape","id":"sh/ytsvu9kn","slide":1,"bbox":[1828,3724,3,3]}
+{"kind":"shape","id":"sh/neloj2t8","slide":1,"bbox":[1865,3777,5,5]}
+{"kind":"shape","id":"sh/cbulwval","slide":1,"bbox":[1902,3830,2,2]}
+{"kind":"shape","id":"sh/5sneloj2","slide":1,"bbox":[1939,3641,2,2]}
+{"kind":"shape","id":"sh/u54zidon","slide":1,"bbox":[1976,3694,2,2]}
+{"kind":"shape","id":"sh/nqxs72x4","slide":1,"bbox":[2013,3747,3,3]}
+{"kind":"shape","id":"sh/gbq1oryt","slide":1,"bbox":[2050,3800,2,2]}
+{"kind":"shape","id":"sh/5wjudg7a","slide":1,"bbox":[2087,3853,2,2]}
+{"kind":"shape","id":"sh/v6psfil0","slide":1,"bbox":[2124,3664,2,2]}
+{"kind":"shape","id":"sh/2lszqtcj","slide":1,"bbox":[1730,3686,122,42]}
+{"kind":"textbox","id":"sh/d8bat47y","slide":1,"text":"🚀 Mina","textPreview":"🚀 Mina","textChars":7,"textLines":1,"bbox":[1738,3694,106,24]}
+{"kind":"shape","id":"sh/knih4byh","slide":1,"bbox":[1885,3686,122,42]}
+{"kind":"textbox","id":"sh/vu9knih4","slide":1,"text":"🚀 Jonas","textPreview":"🚀 Jonas","textChars":8,"textLines":1,"bbox":[1893,3694,106,24]}
+{"kind":"shape","id":"sh/29gr2p8n","slide":1,"bbox":[2040,3686,122,42]}
+{"kind":"textbox","id":"sh/d0z61032","slide":1,"text":"🚀 Noah","textPreview":"🚀 Noah","textChars":7,"textLines":1,"bbox":[2048,3694,106,24]}
+{"kind":"shape","id":"sh/kf6dcbul","slide":1,"bbox":[1730,3772,122,42]}
+{"kind":"textbox","id":"sh/vixczed8","slide":1,"text":"🚀 Lea","textPreview":"🚀 Lea","textChars":6,"textLines":1,"bbox":[1738,3780,106,24]}
+{"kind":"shape","id":"sh/2x4nap4r","slide":1,"bbox":[1885,3772,122,42]}
+{"kind":"textbox","id":"sh/25kb6xkf","slide":1,"text":"🚀 Ali","textPreview":"🚀 Ali","textChars":6,"textLines":1,"bbox":[1893,3780,106,24]}
+{"kind":"shape","id":"sh/rqd4vmtw","slide":1,"bbox":[2040,3772,122,42]}
+{"kind":"textbox","id":"sh/kb6xkf6d","slide":1,"text":"🚀 Emma","textPreview":"🚀 Emma","textChars":7,"textLines":1,"bbox":[2048,3780,106,24]}
+{"kind":"shape","id":"sh/9w3m94fu","slide":1,"bbox":[2595,3666,168,250]}
+{"kind":"textbox","id":"sh/2t83itgf","slide":1,"text":"Themen","textPreview":"Themen","textChars":6,"textLines":1,"bbox":[2615,3685,128,34]}
+{"kind":"shape","id":"sh/re1w7mp0","slide":1,"bbox":[2615,3732,126,34]}
+{"kind":"textbox","id":"sh/kzupwb2h","slide":1,"text":"Graphen","textPreview":"Graphen","textChars":7,"textLines":1,"bbox":[2620,3738,116,22]}
+{"kind":"shape","id":"sh/9knih4by","slide":1,"bbox":[2615,3784,126,34]}
+{"kind":"textbox","id":"sh/2p8nqxs7","slide":1,"text":"Queues","textPreview":"Queues","textChars":6,"textLines":1,"bbox":[2620,3790,116,22]}
+{"kind":"shape","id":"sh/ra5gbq1o","slide":1,"bbox":[2615,3836,126,34]}
+{"kind":"textbox","id":"sh/xs72x4na","slide":1,"text":"Hashing","textPreview":"Hashing","textChars":7,"textLines":1,"bbox":[2620,3842,116,22]}
+{"kind":"shape","id":"sh/87ed8bat","slide":1,"bbox":[1692,3678,300,112]}
+{"kind":"textbox","id":"sh/fmlkjm1c","slide":1,"text":"Team 1","textPreview":"Team 1","textChars":6,"textLines":1,"bbox":[1706,3690,272,25]}
+{"kind":"shape","id":"sh/q1orytsv","slide":1,"bbox":[1706,3720,272,25]}
+{"kind":"textbox","id":"sh/1gvy90je","slide":1,"text":"Graphen","textPreview":"Graphen","textChars":7,"textLines":1,"bbox":[1710,3724,264,18]}
+{"kind":"shape","id":"sh/8z25kb6x","slide":1,"bbox":[1706,3751,272,20]}
+{"kind":"textbox","id":"sh/je9cvixc","slide":1,"text":"Mina","textPreview":"Mina","textChars":4,"textLines":1,"bbox":[1714,3753,256,16]}
+{"kind":"shape","id":"sh/qtcj6tov","slide":1,"bbox":[1706,3776,272,20]}
+{"kind":"textbox","id":"sh/xczed8v6","slide":1,"text":"Jonas","textPreview":"Jonas","textChars":5,"textLines":1,"bbox":[1714,3778,256,16]}
+{"kind":"shape","id":"sh/8v6psfil","slide":1,"bbox":[1692,3814,300,112]}
+{"kind":"textbox","id":"sh/5gbq1ory","slide":1,"text":"Team 2","textPreview":"Team 2","textChars":6,"textLines":1,"bbox":[1706,3826,272,25]}
+{"kind":"shape","id":"sh/cvixczed","slide":1,"bbox":[1706,3856,272,25]}
+{"kind":"textbox","id":"sh/nap4r65w","slide":1,"text":"Hashing","textPreview":"Hashing","textChars":7,"textLines":1,"bbox":[1710,3860,264,18]}
+{"kind":"shape","id":"sh/upwb2hwf","slide":1,"bbox":[1706,3887,272,20]}
+{"kind":"textbox","id":"sh/54zidony","slide":1,"text":"Lea","textPreview":"Lea","textChars":3,"textLines":1,"bbox":[1714,3889,256,16]}
+{"kind":"shape","id":"sh/cj6tovah","slide":1,"bbox":[1706,3912,272,20]}
+{"kind":"textbox","id":"sh/nyd0z610","slide":1,"text":"Noah","textPreview":"Noah","textChars":4,"textLines":1,"bbox":[1714,3914,256,16]}
+{"kind":"textbox","id":"sh/udg7adsj","slide":1,"text":"Kemal Fathulla · Hochschule RheinMain · Master Informatik · Smart Student Picker","textPreview":"Kemal Fathulla · Hochschule RheinMain · Master Informatik · Smart Student Picker","textChars":80,"textLines":1,"bbox":[170,4140,1850,46]}
+{"kind":"textbox","id":"sh/1032lszq","slide":1,"text":"Quellen/Assets: eigene App-Mockups mit Demo-Daten; Layout orientiert an der HSRM-Informatik-Postervorlage; keine personenbezogenen Daten.","textPreview":"Quellen/Assets: eigene App-Mockups mit Demo-Daten; Layout orientiert an der HSRM-Informatik-Postervorlage; keine personenbezogenen Daten.","textChars":137,"textLines":1,"bbox":[170,4210,1980,44]}
+{"kind":"textbox","id":"sh/cfa9w3m9","slide":1,"text":"hsrm*","textPreview":"hsrm*","textChars":5,"textLines":1,"bbox":[2510,4148,430,110]}
+{"kind":"notes","id":"nt/sarm1x","slide":1,"text":""}
