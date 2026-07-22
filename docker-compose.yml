@@ -1,0 +1,16 @@
+# Review-Deployment des develop-Branches.
+# Host-Networking, damit der Container die MariaDB wie die lokale CLI
+# über 127.0.0.1:3306 erreicht (DB-Grants sind localhost-basiert).
+services:
+  app:
+    build:
+      context: .
+    image: smart-student-picker:review
+    container_name: ssp-review
+    network_mode: host
+    # DATABASE_URL kommt aus der lokalen .env (nicht im Image gebacken)
+    env_file: .env
+    environment:
+      PORT: "32300"
+      HOSTNAME: "0.0.0.0"
+    restart: unless-stopped

@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.gitignore
+# Secrets niemals ins Image — kommen zur Laufzeit via --env-file
+.env
+.env.*
+# wird im Build neu generiert
+src/generated
+# große Präsentations-Binärdateien, im Image unnötig
+outputs
+npm-debug.log*
+Dockerfile
+.dockerignore
+README.md
+docs
