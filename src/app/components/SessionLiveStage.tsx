@@ -143,21 +143,28 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState<
+    "connecting" | "live" | "reconnecting"
+  >("connecting");
   const [newParticipantIds, setNewParticipantIds] = useState<Set<string>>(
     () => new Set(),
   );
   const knownParticipantIds = useRef<Set<string>>(new Set());
   const hasLoadedOnce = useRef(false);
 
+  // Session-Metadaten einmalig laden (Name/Typ/Settings/Status aus der DB).
   useEffect(() => {
-    let isMounted = true;
+    let active = true;
 
-    async function loadParticipants() {
+    async function loadSessionMeta() {
       try {
-        const response = await fetch(`/api/sessions/${sessionUuid}/participants`, {
-          cache: "no-store",
-        });
-        const data = (await response.json()) as LiveStageResponse | { message?: string };
+        const response = await fetch(
+          `/api/sessions/${sessionUuid}/participants`,
+          { cache: "no-store" },
+        );
+        const data = (await response.json()) as
+          | LiveStageResponse
+          | { message?: string };
 
         if (!response.ok) {
           throw new Error(
@@ -167,34 +174,12 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
           );
         }
 
-        if (!isMounted || !("participants" in data)) {
-          return;
+        if (active && "session" in data) {
+          setSession(data.session);
+          setErrorMessage("");
         }
-
-        const nextParticipants = data.participants;
-        const incomingIds = nextParticipants
-          .map((participant) => participant.uuid)
-          .filter((uuid) => !knownParticipantIds.current.has(uuid));
-
-        setSession(data.session);
-        setParticipants(nextParticipants);
-        setErrorMessage("");
-
-        if (hasLoadedOnce.current && incomingIds.length > 0) {
-          setNewParticipantIds(new Set(incomingIds));
-          window.setTimeout(() => {
-            if (isMounted) {
-              setNewParticipantIds(new Set());
-            }
-          }, 2200);
-        }
-
-        knownParticipantIds.current = new Set(
-          nextParticipants.map((participant) => participant.uuid),
-        );
-        hasLoadedOnce.current = true;
       } catch (error) {
-        if (isMounted) {
+        if (active) {
           setErrorMessage(
             error instanceof Error
               ? error.message
@@ -202,22 +187,81 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
           );
         }
       } finally {
-        if (isMounted) {
+        if (active) {
           setIsLoading(false);
         }
       }
     }
 
-    loadParticipants();
-    const intervalId = window.setInterval(loadParticipants, 2000);
+    loadSessionMeta();
 
     return () => {
-      isMounted = false;
-      window.clearInterval(intervalId);
+      active = false;
+    };
+  }, [sessionUuid]);
+
+  // Live-Teilnehmer per Server-Sent-Events (Push statt Polling, kein DB-Read).
+  useEffect(() => {
+    const source = new EventSource(`/api/sessions/${sessionUuid}/stream`);
+
+    const handleOpen = () => setConnectionStatus("live");
+    const handleError = () => setConnectionStatus("reconnecting");
+    const handleParticipants = (event: MessageEvent<string>) => {
+      setConnectionStatus("live");
+
+      let nextParticipants: Participant[] = [];
+
+      try {
+        nextParticipants = JSON.parse(event.data) as Participant[];
+      } catch {
+        return;
+      }
+
+      const incomingIds = nextParticipants
+        .map((participant) => participant.uuid)
+        .filter((uuid) => !knownParticipantIds.current.has(uuid));
+
+      setParticipants(nextParticipants);
+
+      if (hasLoadedOnce.current && incomingIds.length > 0) {
+        setNewParticipantIds(new Set(incomingIds));
+        window.setTimeout(() => {
+          setNewParticipantIds(new Set());
+        }, 2200);
+      }
+
+      knownParticipantIds.current = new Set(
+        nextParticipants.map((participant) => participant.uuid),
+      );
+      hasLoadedOnce.current = true;
+    };
+
+    source.addEventListener("open", handleOpen);
+    source.addEventListener("error", handleError);
+    source.addEventListener(
+      "participants",
+      handleParticipants as EventListener,
+    );
+
+    return () => {
+      source.removeEventListener("open", handleOpen);
+      source.removeEventListener("error", handleError);
+      source.removeEventListener(
+        "participants",
+        handleParticipants as EventListener,
+      );
+      source.close();
     };
   }, [sessionUuid]);
 
   async function deleteParticipant(participantUuid: string) {
+    // Optimistisch entfernen; das Relay pusht anschließend die autoritative Liste.
+    setParticipants((currentParticipants) =>
+      currentParticipants.filter(
+        (participant) => participant.uuid !== participantUuid,
+      ),
+    );
+
     try {
       const response = await fetch(
         `/api/sessions/${sessionUuid}/participants/${participantUuid}`,
@@ -225,17 +269,16 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
           method: "DELETE",
         },
       );
-      const data = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Teilnehmer konnte nicht gelöscht werden.");
+        const data = (await response.json().catch(() => ({}))) as {
+          message?: string;
+        };
+        throw new Error(
+          data.message ?? "Teilnehmer konnte nicht entfernt werden.",
+        );
       }
 
-      setParticipants((currentParticipants) =>
-        currentParticipants.filter(
-          (participant) => participant.uuid !== participantUuid,
-        ),
-      );
       setNewParticipantIds((currentIds) => {
         const nextIds = new Set(currentIds);
         nextIds.delete(participantUuid);
@@ -247,7 +290,7 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : "Teilnehmer konnte nicht gelöscht werden.",
+          : "Teilnehmer konnte nicht entfernt werden.",
       );
     }
   }
@@ -293,8 +336,19 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
           </Link>
 
           <div className="flex items-center gap-3 rounded border border-white/15 bg-black/20 px-4 py-2 text-sm text-white/80 backdrop-blur">
-            <SatelliteDish size={17} className="text-cyan-200" />
-            Live alle 2 Sekunden
+            <SatelliteDish
+              size={17}
+              className={
+                connectionStatus === "live"
+                  ? "text-cyan-200"
+                  : "text-amber-300 motion-safe:animate-pulse"
+              }
+            />
+            {connectionStatus === "live"
+              ? "Live verbunden"
+              : connectionStatus === "reconnecting"
+                ? "Verbindung wird wiederhergestellt…"
+                : "Verbinde…"}
           </div>
         </header>
 

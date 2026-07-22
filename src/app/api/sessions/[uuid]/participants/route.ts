@@ -5,6 +5,7 @@ import {
   parseSessionSettings,
   type SessionSettings,
 } from "@/lib/sessionTypes";
+import { snapshot } from "@/lib/liveRelay";
 import { NextResponse } from "next/server";
 
 type SessionRow = {
@@ -15,12 +16,8 @@ type SessionRow = {
   status: string;
 };
 
-type ParticipantRow = {
-  uuid: string;
-  name: string;
-  created_at: Date | string | null;
-};
-
+// Liefert die Session-Metadaten (aus der DB) plus den aktuellen Teilnehmer-
+// Snapshot aus dem flüchtigen Relay (Prinzip P1: Namen nie aus der DB).
 export async function GET(
   _request: Request,
   context: { params: Promise<{ uuid: string }> },
@@ -43,13 +40,6 @@ export async function GET(
     );
   }
 
-  const participants = await prisma.$queryRaw<ParticipantRow[]>`
-    SELECT uuid, name, created_at
-    FROM participants
-    WHERE session_uuid = ${uuid}
-    ORDER BY created_at ASC, id ASC
-  `;
-
   return NextResponse.json(
     {
       session: {
@@ -60,12 +50,7 @@ export async function GET(
           parseSessionSettings(session.settings),
         ),
       },
-      participants: participants.map((participant) => ({
-        ...participant,
-        created_at: participant.created_at
-          ? new Date(participant.created_at).toISOString()
-          : null,
-      })),
+      participants: snapshot(uuid),
     },
     {
       headers: {

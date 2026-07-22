@@ -1,34 +1,21 @@
-import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { removeParticipant } from "@/lib/liveRelay";
 
-type ParticipantRow = {
-  uuid: string;
-};
-
+// Entfernt einen Teilnehmer aus dem flüchtigen Relay (kein DB-Zugriff, P1).
 export async function DELETE(
   _request: Request,
   context: { params: Promise<{ uuid: string; participantUuid: string }> },
 ) {
   const { uuid, participantUuid } = await context.params;
 
-  const participants = await prisma.$queryRaw<ParticipantRow[]>`
-    SELECT uuid
-    FROM participants
-    WHERE session_uuid = ${uuid} AND uuid = ${participantUuid}
-    LIMIT 1
-  `;
+  const existed = removeParticipant(uuid, participantUuid);
 
-  if (!participants[0]) {
+  if (!existed) {
     return NextResponse.json(
       { message: "Teilnehmer wurde nicht gefunden." },
       { status: 404 },
     );
   }
-
-  await prisma.$executeRaw`
-    DELETE FROM participants
-    WHERE session_uuid = ${uuid} AND uuid = ${participantUuid}
-  `;
 
   return NextResponse.json({ success: true });
 }
