@@ -37,6 +37,9 @@ const defaultValues: SessionFormValues = {
   settings: {},
 };
 
+const fieldClass =
+  "rounded-lg border border-white/15 bg-black/25 px-4 py-2.5 text-white outline-none transition placeholder:text-white/35 focus:border-cyan-200";
+
 export default function SessionForm({
   title,
   submitLabel,
@@ -49,7 +52,7 @@ export default function SessionForm({
 
   function updateField<K extends keyof SessionFormValues>(
     field: K,
-    value: SessionFormValues[K]
+    value: SessionFormValues[K],
   ) {
     setValues((currentValues) => ({
       ...currentValues,
@@ -89,26 +92,31 @@ export default function SessionForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl bg-white p-6 shadow">
-      <h2 className="text-xl font-semibold">{title}</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-2xl border border-white/12 bg-white/5 p-6 shadow-2xl backdrop-blur"
+    >
+      <h2 className="text-lg font-semibold text-white">{title}</h2>
 
       <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-6">
         <input
-          className="rounded-lg border border-gray-300 px-4 py-2 md:col-span-2"
+          className={`${fieldClass} md:col-span-2`}
           value={values.name}
           onChange={(event) => updateField("name", event.target.value)}
-          placeholder="Session Name"
+          placeholder="Session-Name"
         />
 
         <select
-          className="rounded-lg border border-gray-300 px-4 py-2"
+          className={fieldClass}
           value={values.type}
-          onChange={(event) =>
-            updateType(event.target.value as SessionType)
-          }
+          onChange={(event) => updateType(event.target.value as SessionType)}
         >
           {SESSION_TYPES.map((sessionType) => (
-            <option key={sessionType.value} value={sessionType.value}>
+            <option
+              key={sessionType.value}
+              value={sessionType.value}
+              className="bg-slate-900"
+            >
               {sessionType.label}
             </option>
           ))}
@@ -116,7 +124,7 @@ export default function SessionForm({
 
         {values.type === "team_draw" && (
           <input
-            className="rounded-lg border border-gray-300 px-4 py-2"
+            className={fieldClass}
             type="number"
             min={MIN_TEAM_SIZE}
             max={MAX_TEAM_SIZE}
@@ -127,31 +135,37 @@ export default function SessionForm({
         )}
 
         <select
-          className="rounded-lg border border-gray-300 px-4 py-2"
+          className={fieldClass}
           value={values.status}
           onChange={(event) =>
             updateField("status", event.target.value as SessionStatus)
           }
         >
-          <option value="inactive">inactive</option>
-          <option value="active">active</option>
-          <option value="closed">closed</option>
+          <option value="inactive" className="bg-slate-900">
+            inactive
+          </option>
+          <option value="active" className="bg-slate-900">
+            active
+          </option>
+          <option value="closed" className="bg-slate-900">
+            closed
+          </option>
         </select>
 
         <div className="flex gap-2">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 rounded-lg bg-black px-5 py-2 text-white disabled:opacity-50"
+            className="flex-1 rounded-lg bg-cyan-200 px-5 py-2.5 font-bold text-slate-950 transition hover:bg-cyan-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isSubmitting ? "Speichern..." : submitLabel}
+            {isSubmitting ? "Speichern…" : submitLabel}
           </button>
 
           {onCancel && (
             <button
               type="button"
               onClick={onCancel}
-              className="rounded-lg bg-gray-200 px-5 py-2"
+              className="rounded-lg border border-white/15 bg-white/5 px-5 py-2.5 text-white/80 transition hover:bg-white/10"
             >
               Abbrechen
             </button>
