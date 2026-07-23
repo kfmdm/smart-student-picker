@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Pencil, Rocket, Sparkles, Trash2 } from "lucide-react";
+import { LogOut, Pencil, Rocket, Sparkles, Trash2 } from "lucide-react";
 import {
   getSessionTypeLabel,
   type SessionSettings,
@@ -90,23 +90,40 @@ export default function AdminDashboard() {
     await loadSessions();
   }
 
+  async function logout() {
+    await fetch("/api/login", { method: "DELETE" });
+    window.location.href = "/login";
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#070815] text-white">
       <div className="absolute inset-0 bg-[linear-gradient(145deg,#070815_0%,#111942_42%,#2b1744_70%,#051d28_100%)]" />
       <div className="absolute inset-0 opacity-50 bg-[radial-gradient(circle_at_15%_15%,rgba(111,211,255,0.18),transparent_30%),radial-gradient(circle_at_85%_80%,rgba(255,115,181,0.14),transparent_32%)]" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-5 py-10 sm:px-8">
-        <header>
-          <div className="flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-cyan-100">
-            <Sparkles size={18} />
-            Admin-Dashboard
+        <header className="flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-sm uppercase tracking-[0.18em] text-cyan-100">
+              <Sparkles size={18} />
+              Admin-Dashboard
+            </div>
+            <h1 className="mt-3 text-4xl font-black sm:text-5xl">
+              Smart Student Picker
+            </h1>
+            <p className="mt-2 text-white/60">
+              Sessions anlegen, QR-Codes teilen und die Live-Auslosung starten.
+            </p>
           </div>
-          <h1 className="mt-3 text-4xl font-black sm:text-5xl">
-            Smart Student Picker
-          </h1>
-          <p className="mt-2 text-white/60">
-            Sessions anlegen, QR-Codes teilen und die Live-Auslosung starten.
-          </p>
+
+          <button
+            type="button"
+            onClick={logout}
+            title="Abmelden"
+            className="flex shrink-0 items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/80 transition hover:bg-white/10"
+          >
+            <LogOut size={16} />
+            <span className="hidden sm:inline">Abmelden</span>
+          </button>
         </header>
 
         <div className="mt-8">

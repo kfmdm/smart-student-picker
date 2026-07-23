@@ -6,13 +6,22 @@ import {
   normalizeSessionSettings,
   type SessionType,
 } from "@/lib/sessionTypes";
+import { isAdminAuthed } from "@/lib/adminAuth";
 
 type SessionStatus = "inactive" | "active" | "closed";
+
+function unauthorized() {
+  return NextResponse.json({ message: "Nicht autorisiert." }, { status: 401 });
+}
 
 export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ uuid: string }> },
 ) {
+  if (!(await isAdminAuthed())) {
+    return unauthorized();
+  }
+
   const { uuid } = await context.params;
   const body = await request.json();
 
@@ -45,6 +54,10 @@ export async function DELETE(
   _request: NextRequest,
   context: { params: Promise<{ uuid: string }> },
 ) {
+  if (!(await isAdminAuthed())) {
+    return unauthorized();
+  }
+
   const { uuid } = await context.params;
 
   await prisma.$executeRaw`

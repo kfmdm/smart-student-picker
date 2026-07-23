@@ -9,8 +9,13 @@ import {
   type SessionSettings,
   type SessionType,
 } from "@/lib/sessionTypes";
+import { isAdminAuthed } from "@/lib/adminAuth";
 
 type SessionStatus = "inactive" | "active" | "closed";
+
+function unauthorized() {
+  return NextResponse.json({ message: "Nicht autorisiert." }, { status: 401 });
+}
 type SessionRow = {
   id: number;
   uuid: string;
@@ -23,6 +28,10 @@ type SessionRow = {
 };
 
 export async function GET() {
+  if (!(await isAdminAuthed())) {
+    return unauthorized();
+  }
+
   const sessions = await prisma.$queryRaw<SessionRow[]>`
     SELECT id, uuid, name, type, settings, status, created_at, updated_at
     FROM sessions
@@ -42,6 +51,10 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!(await isAdminAuthed())) {
+    return unauthorized();
+  }
+
   const body = await request.json();
 
   const name = String(body.name ?? "").trim();
