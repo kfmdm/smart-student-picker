@@ -5,7 +5,7 @@ import {
   parseSessionSettings,
   type SessionSettings,
 } from "@/lib/sessionTypes";
-import { snapshot } from "@/lib/liveRelay";
+import { clearParticipants, snapshot } from "@/lib/liveRelay";
 import { NextResponse } from "next/server";
 
 type SessionRow = {
@@ -58,4 +58,14 @@ export async function GET(
       },
     },
   );
+}
+
+// Leert alle Teilnehmer der Session im Relay (nach dem Excel-Export).
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ uuid: string }> },
+) {
+  const { uuid } = await context.params;
+  clearParticipants(uuid);
+  return NextResponse.json({ success: true });
 }

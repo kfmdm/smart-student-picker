@@ -152,3 +152,15 @@ export function removeParticipant(
 
   return existed;
 }
+
+// Leert alle Teilnehmer einer Session (z.B. nach dem Excel-Export).
+export function clearParticipants(sessionUuid: string): void {
+  const channel = channels.get(sessionUuid);
+
+  if (!channel || channel.participants.size === 0) {
+    return;
+  }
+
+  channel.participants.clear();
+  broadcast(channel);
+}

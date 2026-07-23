@@ -76,7 +76,17 @@ import {
   pickWeighted,
   type FairnessMemory,
 } from "@/lib/fairness";
-import { parseFairness, serializeFairness } from "@/lib/csv";
+import {
+  exportFairnessWorkbook,
+  parseFairnessWorkbook,
+} from "@/lib/xlsx";
+import {
+  fairnessKey,
+  loadJSON,
+  participantsKey,
+  removeKey,
+  saveJSON,
+} from "@/lib/clientStore";
 import { createLocalId, distributeTeams, shuffleItems } from "@/lib/teams";
 
 type Participant = {
@@ -104,11 +114,13 @@ type SessionLiveStageProps = {
 
 type StageModeProps = {
   session: Session | null;
+  sessionUuid: string;
   participants: Participant[];
   newParticipantIds: Set<string>;
   isLoading: boolean;
   errorMessage: string;
   onDeleteParticipant: (participantUuid: string) => Promise<void>;
+  onResetParticipants: () => Promise<void>;
 };
 
 type Topic = {
@@ -175,6 +187,21 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
   const knownParticipantIds = useRef<Set<string>>(new Set());
   const hasLoadedOnce = useRef(false);
 
+  // Bewerber aus dem localStorage wiederherstellen (überlebt einen Refresh,
+  // auch wenn das Relay – etwa nach einem Neustart – leer ist).
+  useEffect(() => {
+    const stored = loadJSON<Participant[]>(participantsKey(sessionUuid), []);
+    if (stored.length > 0) {
+      // Post-Mount-Hydration aus dem localStorage (externes System) – bewusst.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setParticipants(stored);
+      knownParticipantIds.current = new Set(
+        stored.map((participant) => participant.uuid),
+      );
+      hasLoadedOnce.current = true;
+    }
+  }, [sessionUuid]);
+
   // Session-Metadaten einmalig laden (Name/Typ/Settings/Status aus der DB).
   useEffect(() => {
     let active = true;
@@ -232,19 +259,37 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
     const handleParticipants = (event: MessageEvent<string>) => {
       setConnectionStatus("live");
 
-      let nextParticipants: Participant[] = [];
+      let snapshotParticipants: Participant[] = [];
 
       try {
-        nextParticipants = JSON.parse(event.data) as Participant[];
+        snapshotParticipants = JSON.parse(event.data) as Participant[];
       } catch {
         return;
       }
 
-      const incomingIds = nextParticipants
+      const incomingIds = snapshotParticipants
         .map((participant) => participant.uuid)
         .filter((uuid) => !knownParticipantIds.current.has(uuid));
 
-      setParticipants(nextParticipants);
+      // Union mit dem bisherigen Stand: einmal gesehene Bewerber bleiben
+      // erhalten, auch wenn ein kurzer Reconnect eine leere Momentaufnahme
+      // liefert. Entfernt wird nur explizit (Löschen/Export).
+      setParticipants((currentParticipants) => {
+        const byUuid = new Map(
+          currentParticipants.map((participant) => [
+            participant.uuid,
+            participant,
+          ]),
+        );
+        for (const participant of snapshotParticipants) {
+          if (!byUuid.has(participant.uuid)) {
+            byUuid.set(participant.uuid, participant);
+          }
+        }
+        const merged = Array.from(byUuid.values());
+        saveJSON(participantsKey(sessionUuid), merged);
+        return merged;
+      });
 
       if (hasLoadedOnce.current && incomingIds.length > 0) {
         setNewParticipantIds(new Set(incomingIds));
@@ -253,9 +298,10 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
         }, 2200);
       }
 
-      knownParticipantIds.current = new Set(
-        nextParticipants.map((participant) => participant.uuid),
-      );
+      knownParticipantIds.current = new Set([
+        ...knownParticipantIds.current,
+        ...snapshotParticipants.map((participant) => participant.uuid),
+      ]);
       hasLoadedOnce.current = true;
     };
 
@@ -279,11 +325,13 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
 
   async function deleteParticipant(participantUuid: string) {
     // Optimistisch entfernen; das Relay pusht anschließend die autoritative Liste.
-    setParticipants((currentParticipants) =>
-      currentParticipants.filter(
+    setParticipants((currentParticipants) => {
+      const next = currentParticipants.filter(
         (participant) => participant.uuid !== participantUuid,
-      ),
-    );
+      );
+      saveJSON(participantsKey(sessionUuid), next);
+      return next;
+    });
 
     try {
       const response = await fetch(
@@ -318,13 +366,30 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
     }
   }
 
+  // Bewerber + Relay leeren (nach dem Excel-Export).
+  async function resetParticipants() {
+    setParticipants([]);
+    setNewParticipantIds(new Set());
+    knownParticipantIds.current = new Set();
+    removeKey(participantsKey(sessionUuid));
+    try {
+      await fetch(`/api/sessions/${sessionUuid}/participants`, {
+        method: "DELETE",
+      });
+    } catch {
+      // Relay evtl. nicht erreichbar – der lokale Reset ist bereits erfolgt.
+    }
+  }
+
   const modeProps: StageModeProps = {
     session,
+    sessionUuid,
     participants,
     newParticipantIds,
     isLoading,
     errorMessage,
     onDeleteParticipant: deleteParticipant,
+    onResetParticipants: resetParticipants,
   };
 
   return (
@@ -550,20 +615,29 @@ function ScrambleParticipants({
 
 function SingleDrawMode({
   session,
+  sessionUuid,
   participants,
   newParticipantIds,
   isLoading,
   errorMessage,
   onDeleteParticipant,
+  onResetParticipants,
 }: StageModeProps) {
   const [winner, setWinner] = useState<Participant | null>(null);
   const [pendingWinner, setPendingWinner] = useState<Participant | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [roundDifficulty, setRoundDifficulty] = useState<number>(2);
   const [roundCommitted, setRoundCommitted] = useState(false);
-  const [fairnessMemory, setFairnessMemory] = useState<FairnessMemory>({});
+  // Fairness-Gedächtnis überlebt einen Refresh (localStorage).
+  const [fairnessMemory, setFairnessMemory] = useState<FairnessMemory>(() =>
+    loadJSON<FairnessMemory>(fairnessKey(sessionUuid), {}),
+  );
   const [manualBonus, setManualBonus] = useState<Record<string, number>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    saveJSON(fairnessKey(sessionUuid), fairnessMemory);
+  }, [sessionUuid, fairnessMemory]);
 
   function dismissWinner() {
     setWinner(null);
@@ -712,27 +786,29 @@ function SingleDrawMode({
     setRoundCommitted(true);
   }
 
-  async function importFairnessCsv(file: File) {
+  async function importFairnessWorkbook(file: File) {
     try {
-      const text = await file.text();
-      setFairnessMemory(parseFairness(text));
+      setFairnessMemory(await parseFairnessWorkbook(file));
     } catch {
       // Ungültige Datei wird ignoriert.
     }
   }
 
-  function exportFairnessCsv() {
-    const csv = serializeFairness(fairnessMemory);
-    // BOM voranstellen, damit Excel UTF-8 korrekt erkennt.
-    const blob = new Blob(["﻿", csv], {
-      type: "text/csv;charset=utf-8",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `fairness-${session?.name ?? "session"}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
+  // Excel-Export = "Runde abschließen": Datei speichern, danach den lokalen
+  // Arbeitsstand (Bewerber + Fairness) leeren, damit ein Refresh nichts mehr
+  // versehentlich verliert und die nächste Sitzung sauber startet.
+  async function exportFairnessWorkbookAndReset() {
+    await exportFairnessWorkbook(
+      fairnessMemory,
+      `fairness-${session?.name ?? "session"}.xlsx`,
+    );
+
+    setFairnessMemory({});
+    setManualBonus({});
+    setWinner(null);
+    setRoundCommitted(false);
+    removeKey(fairnessKey(sessionUuid));
+    await onResetParticipants();
   }
 
   const formatWeight = (weight: number) =>
@@ -836,25 +912,26 @@ function SingleDrawMode({
             onClick={() => fileInputRef.current?.click()}
             className="inline-flex flex-1 items-center justify-center gap-2 rounded border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
           >
-            <Upload size={16} /> CSV laden
+            <Upload size={16} /> Excel laden
           </button>
           <button
             type="button"
-            onClick={exportFairnessCsv}
+            onClick={exportFairnessWorkbookAndReset}
             disabled={knownCount === 0}
+            title="Excel speichern und den lokalen Stand zurücksetzen"
             className="inline-flex flex-1 items-center justify-center gap-2 rounded border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Download size={16} /> CSV export
+            <Download size={16} /> Excel export
           </button>
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,text/csv"
+            accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             className="hidden"
             onChange={(event) => {
               const file = event.target.files?.[0];
               if (file) {
-                void importFairnessCsv(file);
+                void importFairnessWorkbook(file);
               }
               event.target.value = "";
             }}
