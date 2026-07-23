@@ -56,6 +56,17 @@ import {
   getSessionTypeLabel,
   type SessionSettings,
 } from "@/lib/sessionTypes";
+import { Check, Download, Gauge, Upload } from "lucide-react";
+import {
+  DEFAULT_ALPHA,
+  DIFFICULTY_LEVELS,
+  applyRoundResult,
+  drawWeight,
+  getRecord,
+  pickWeighted,
+  type FairnessMemory,
+} from "@/lib/fairness";
+import { parseFairness, serializeFairness } from "@/lib/csv";
 
 type Participant = {
   uuid: string;
@@ -536,12 +547,29 @@ function SingleDrawMode({
   const [winner, setWinner] = useState<Participant | null>(null);
   const [pendingWinner, setPendingWinner] = useState<Participant | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [participantWeights, setParticipantWeights] = useState<
-    Record<string, number>
-  >({});
+  const [roundDifficulty, setRoundDifficulty] = useState<number>(2);
+  const [roundCommitted, setRoundCommitted] = useState(false);
+  const [fairnessMemory, setFairnessMemory] = useState<FairnessMemory>({});
+  const [manualBonus, setManualBonus] = useState<Record<string, number>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function dismissWinner() {
     setWinner(null);
+  }
+
+  // Effektives Auslosungsgewicht: Fairness-Guthaben + manueller Override.
+  // Bereits vorgetragene Personen fallen aus dem Pool (Gewicht 0).
+  function weightOf(participant: Participant): number {
+    const record = getRecord(fairnessMemory, participant.name);
+
+    if (record.presented) {
+      return 0;
+    }
+
+    const base = drawWeight(record, DEFAULT_ALPHA);
+    const bonus = manualBonus[participant.uuid] ?? 0;
+
+    return Math.max(0, base + bonus);
   }
 
   useEffect(() => {
@@ -578,36 +606,40 @@ function SingleDrawMode({
 
     return [...visibleParticipants, pendingWinner];
   }, [pendingWinner, visibleParticipants]);
-  const weightedParticipants = useMemo(
+
+  const eligibleParticipants = useMemo(
     () =>
-      participants.flatMap((participant) =>
-        Array.from(
-          { length: participantWeights[participant.uuid] ?? 1 },
-          () => participant,
-        ),
+      participants.filter(
+        (participant) => !getRecord(fairnessMemory, participant.name).presented,
       ),
-    [participants, participantWeights],
+    [participants, fairnessMemory],
   );
+  const totalWeight = useMemo(
+    () =>
+      eligibleParticipants.reduce(
+        (sum, participant) => sum + weightOf(participant),
+        0,
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [eligibleParticipants, fairnessMemory, manualBonus],
+  );
+  const knownCount = Object.keys(fairnessMemory).length;
+  const canDraw = totalWeight > 0 && !isDrawing;
 
-  function updateParticipantWeight(participantUuid: string, change: number) {
-    setParticipantWeights((currentWeights) => {
-      const currentWeight = currentWeights[participantUuid] ?? 1;
-      const nextWeight = Math.max(1, currentWeight + change);
-
-      return {
-        ...currentWeights,
-        [participantUuid]: nextWeight,
-      };
-    });
+  function updateManualBonus(participantUuid: string, change: number) {
+    setManualBonus((currentBonus) => ({
+      ...currentBonus,
+      [participantUuid]: (currentBonus[participantUuid] ?? 0) + change,
+    }));
   }
 
   async function handleDeleteParticipant(participantUuid: string) {
     await onDeleteParticipant(participantUuid);
 
-    setParticipantWeights((currentWeights) => {
-      const nextWeights = { ...currentWeights };
-      delete nextWeights[participantUuid];
-      return nextWeights;
+    setManualBonus((currentBonus) => {
+      const nextBonus = { ...currentBonus };
+      delete nextBonus[participantUuid];
+      return nextBonus;
     });
 
     if (winner?.uuid === participantUuid) {
@@ -620,18 +652,24 @@ function SingleDrawMode({
   }
 
   function drawWinner() {
-    if (weightedParticipants.length === 0 || isDrawing) {
+    if (isDrawing) {
+      return;
+    }
+
+    const entries = eligibleParticipants.map((participant) => ({
+      item: participant,
+      weight: weightOf(participant),
+    }));
+    const selectedWinner = pickWeighted(entries);
+
+    if (!selectedWinner) {
       return;
     }
 
     setWinner(null);
-    setPendingWinner(null);
-    setIsDrawing(true);
-
-    const winnerIndex = Math.floor(Math.random() * weightedParticipants.length);
-    const selectedWinner = weightedParticipants[winnerIndex];
-
     setPendingWinner(selectedWinner);
+    setRoundCommitted(false);
+    setIsDrawing(true);
 
     window.setTimeout(() => {
       setWinner(selectedWinner);
@@ -639,6 +677,54 @@ function SingleDrawMode({
       setIsDrawing(false);
     }, 2300);
   }
+
+  // Runde ins Fairness-Gedächtnis übernehmen (Gewinner => vorgetragen,
+  // übrige Melder sammeln Guthaben je nach Schwierigkeit).
+  function scoreRound() {
+    if (!winner || roundCommitted) {
+      return;
+    }
+
+    const volunteerNames = eligibleParticipants.map(
+      (participant) => participant.name,
+    );
+
+    setFairnessMemory((currentMemory) =>
+      applyRoundResult(currentMemory, {
+        winnerName: winner.name,
+        volunteerNames,
+        difficulty: roundDifficulty,
+      }),
+    );
+    setManualBonus({});
+    setRoundCommitted(true);
+  }
+
+  async function importFairnessCsv(file: File) {
+    try {
+      const text = await file.text();
+      setFairnessMemory(parseFairness(text));
+    } catch {
+      // Ungültige Datei wird ignoriert.
+    }
+  }
+
+  function exportFairnessCsv() {
+    const csv = serializeFairness(fairnessMemory);
+    // BOM voranstellen, damit Excel UTF-8 korrekt erkennt.
+    const blob = new Blob(["﻿", csv], {
+      type: "text/csv;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `fairness-${session?.name ?? "session"}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  const formatWeight = (weight: number) =>
+    (Math.round(weight * 10) / 10).toString();
 
   return (
     <>
@@ -685,40 +771,129 @@ function SingleDrawMode({
       <aside className="rounded border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur">
         <ParticipantSummary count={participants.length} />
 
+        <div className="mt-6">
+          <p className="flex items-center gap-2 text-sm font-medium text-white/75">
+            <Gauge size={16} className="text-cyan-100" />
+            Schwierigkeit dieser Runde
+          </p>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {DIFFICULTY_LEVELS.map((level) => (
+              <button
+                key={level.value}
+                type="button"
+                onClick={() => setRoundDifficulty(level.value)}
+                className={`rounded border px-2 py-2 text-sm font-semibold capitalize transition ${
+                  roundDifficulty === level.value
+                    ? "border-cyan-200/70 bg-cyan-200/20 text-cyan-50"
+                    : "border-white/15 bg-black/20 text-white/70 hover:bg-white/10"
+                }`}
+              >
+                {level.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <button
           type="button"
           onClick={drawWinner}
-          disabled={weightedParticipants.length === 0 || isDrawing}
-          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded bg-amber-300 px-4 py-3 font-bold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-45"
+          disabled={!canDraw}
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded bg-amber-300 px-4 py-3 font-bold text-slate-950 transition hover:bg-amber-200 disabled:cursor-not-allowed disabled:opacity-45"
         >
           <Crown size={20} />
           {winner ? "Nochmal auslosen" : isDrawing ? "Auslosung..." : "Auslosen"}
         </button>
+
+        {winner && !isDrawing && (
+          <button
+            type="button"
+            onClick={scoreRound}
+            disabled={roundCommitted}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded border border-emerald-200/40 bg-emerald-200/15 px-4 py-2 text-sm font-bold text-emerald-50 transition hover:bg-emerald-200/25 disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            <Check size={17} />
+            {roundCommitted
+              ? "Runde gewertet"
+              : `„${winner.name}" als vorgetragen werten`}
+          </button>
+        )}
+
+        <div className="mt-4 flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+          >
+            <Upload size={16} /> CSV laden
+          </button>
+          <button
+            type="button"
+            onClick={exportFairnessCsv}
+            disabled={knownCount === 0}
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded border border-white/15 bg-black/20 px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Download size={16} /> CSV export
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,text/csv"
+            className="hidden"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) {
+                void importFairnessCsv(file);
+              }
+              event.target.value = "";
+            }}
+          />
+        </div>
+        {knownCount > 0 && (
+          <p className="mt-2 text-xs text-white/50">
+            {knownCount} Personen im Fairness-Gedächtnis
+          </p>
+        )}
 
         <ParticipantList
           participants={participants}
           disabled={isDrawing}
           onDeleteParticipant={handleDeleteParticipant}
           renderControls={(participant) => {
-            const weight = participantWeights[participant.uuid] ?? 1;
+            const record = getRecord(fairnessMemory, participant.name);
+
+            if (record.presented) {
+              return (
+                <span
+                  className="flex shrink-0 items-center gap-1 rounded bg-emerald-300/15 px-2 py-1 text-xs font-bold text-emerald-100"
+                  title="Hat bereits vorgetragen"
+                >
+                  <Check size={13} /> fertig
+                </span>
+              );
+            }
+
+            const weight = weightOf(participant);
 
             return (
               <>
                 <button
                   type="button"
-                  onClick={() => updateParticipantWeight(participant.uuid, -1)}
-                  disabled={weight === 1}
+                  onClick={() => updateManualBonus(participant.uuid, -1)}
+                  disabled={weight <= 1}
                   title="Gewichtung verringern"
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-white/15 bg-white/10 text-white transition hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-35"
                 >
                   <Minus size={16} />
                 </button>
-                <span className="shrink-0 rounded bg-amber-200/15 px-2 py-1 text-center text-xs font-bold text-amber-100">
-                  x{weight}
+                <span
+                  className="shrink-0 rounded bg-amber-200/15 px-2 py-1 text-center text-xs font-bold text-amber-100"
+                  title={`Guthaben ${record.credit}, ${record.attempts}× erfolglos gemeldet`}
+                >
+                  ×{formatWeight(weight)}
                 </span>
                 <button
                   type="button"
-                  onClick={() => updateParticipantWeight(participant.uuid, 1)}
+                  onClick={() => updateManualBonus(participant.uuid, 1)}
                   title="Gewichtung erhöhen"
                   className="flex h-8 w-8 shrink-0 items-center justify-center rounded border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
                 >
