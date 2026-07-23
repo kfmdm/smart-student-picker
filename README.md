@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Student Picker
 
-## Getting Started
+Digitales, faires und **datensparsames** Werkzeug für die Lehre: Aufgaben per
+Einzelauslosung vergeben und Teams (+ Themen) bilden – als „Bewerbungsflug"-Bühne,
+beamer-tauglich und mobil.
 
-First, run the development server:
+- **Sz1 – Einzelauslosung (`single_draw`):** Studierende melden sich per QR-Code,
+  eine Person wird **fair** gezogen (nicht rein zufällig – wer sich meldet und nicht
+  drankommt, sammelt Guthaben; schwerere Aufgaben zählen mehr). Persistenz übers
+  Semester ausschließlich per CSV-Export/-Import im Browser.
+- **Sz2 – Team-Auslosung (`team_draw`):** Teams und Themen getrennt oder zusammen
+  auslosen, per Drag & Drop anpassen, **Teams sperren** und **Mitglieder fixieren**
+  („Lock & Draw" – nur der freie Rest wird verteilt).
+
+## Prinzip: Datensparsamkeit
+
+Teilnehmernamen werden **nicht** in der Datenbank gespeichert. Sie fließen über ein
+flüchtiges In-Memory-Relay (`src/lib/liveRelay.ts`) und werden per **SSE**
+(`/api/sessions/[uuid]/stream`) live an den Prof-Client gepusht. Die MariaDB hält nur
+nicht-personenbezogene Session-Metadaten (`name/type/settings/status`).
+
+## Stack
+
+Next.js 16 (App Router) · React 19 · Tailwind 4 · Prisma 7 als typisierter Client für
+rohes SQL (kein ORM/Schema-Models) · MariaDB · `@dnd-kit` für Drag & Drop.
+
+## Lokal starten
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env      # DATABASE_URL eintragen (Sonderzeichen URL-encoden!)
+npx prisma generate
+npm run dev               # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment / Betrieb
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Siehe [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Docker + Plesk-Reverse-Proxy) und den
+Fortschritt/Backlog in [`docs/BACKLOG.md`](docs/BACKLOG.md).

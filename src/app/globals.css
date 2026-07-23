@@ -199,3 +199,22 @@ body {
     transform: translate3d(0, 0, 0) scale(1) rotate(0);
   }
 }
+
+/* Barrierefreiheit: Animationen respektieren die Systemeinstellung. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .star-drift,
+  .participant-rocket,
+  .participant-rocket--new,
+  .participant-rocket--scramble {
+    animation: none !important;
+  }
+}
