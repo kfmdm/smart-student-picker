@@ -15,6 +15,7 @@ ENV DATABASE_URL=$DATABASE_URL
 RUN npx prisma generate && npm run build
 
 ENV NODE_ENV=production
-# Standard-Port; per PORT-Env überschreibbar (docker-compose setzt 32300)
-EXPOSE 3000
+# App lauscht auf Port 80 (docker-compose setzt PORT=80), damit die
+# Plesk-Docker-Extension den Reverse-Proxy auf Container-Port 80 anbietet.
+EXPOSE 80
 CMD ["npm", "run", "start"]

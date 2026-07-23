@@ -1,16 +1,21 @@
 # Review-Deployment des develop-Branches.
-# Host-Networking, damit der Container die MariaDB wie die lokale CLI
-# über 127.0.0.1:3306 erreicht (DB-Grants sind localhost-basiert).
+# Bridge-Netz + veröffentlichter Port, damit die Plesk-Docker-Extension den
+# Reverse-Proxy (Domain -> Container:80) wie bei den anderen Subdomains anbietet.
 services:
   app:
     build:
       context: .
     image: smart-student-picker:review
     container_name: ssp-review
-    network_mode: host
+    ports:
+      - "32801:80"
+    extra_hosts:
+      # Host-MariaDB aus dem Container erreichbar machen
+      # (MariaDB bindet 0.0.0.0:3306, User hsrm@%).
+      - "host.docker.internal:host-gateway"
     # DATABASE_URL kommt aus der lokalen .env (nicht im Image gebacken)
     env_file: .env
     environment:
-      PORT: "32800"
+      PORT: "80"
       HOSTNAME: "0.0.0.0"
     restart: unless-stopped
