@@ -11,6 +11,6 @@ services:
     # DATABASE_URL kommt aus der lokalen .env (nicht im Image gebacken)
     env_file: .env
     environment:
-      PORT: "32300"
+      PORT: "32800"
       HOSTNAME: "0.0.0.0"
     restart: unless-stopped
