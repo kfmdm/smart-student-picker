@@ -56,7 +56,17 @@ import {
   getSessionTypeLabel,
   type SessionSettings,
 } from "@/lib/sessionTypes";
-import { Check, Download, Gauge, Upload } from "lucide-react";
+import {
+  Check,
+  Download,
+  Gauge,
+  Lock,
+  LockOpen,
+  Pin,
+  PinOff,
+  Upload,
+  UserPlus,
+} from "lucide-react";
 import {
   DEFAULT_ALPHA,
   DIFFICULTY_LEVELS,
@@ -109,6 +119,7 @@ type Team = {
   id: string;
   members: Participant[];
   topic?: Topic;
+  locked: boolean;
 };
 
 type ActiveDrag = {
@@ -926,16 +937,14 @@ function TeamDrawMode({
     session?.settings.teamSize ?? DEFAULT_TEAM_SIZE,
   );
   const [teamSizeInput, setTeamSizeInput] = useState(String(savedTeamSize));
-  const [teamResult, setTeamResult] = useState<{
-    participantKey: string;
-    teamSize: number;
-    teams: Team[];
-  } | null>(null);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [fixedIds, setFixedIds] = useState<Set<string>>(() => new Set());
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicInput, setTopicInput] = useState("");
   const [openSections, setOpenSections] = useState({
     teamSize: true,
-    topics: true,
+    pool: true,
+    topics: false,
     participants: false,
   });
   const [activeDrag, setActiveDrag] = useState<ActiveDrag | null>(null);
@@ -952,39 +961,56 @@ function TeamDrawMode({
       },
     }),
   );
+
   const inputTeamSize = Number(teamSizeInput);
   const teamSize =
     teamSizeInput && Number.isFinite(inputTeamSize)
       ? clampTeamSize(inputTeamSize)
       : savedTeamSize;
-  const participantKey = useMemo(
-    () => participants.map((participant) => participant.uuid).join("|"),
+
+  const liveIds = useMemo(
+    () => new Set(participants.map((participant) => participant.uuid)),
     [participants],
   );
-  const teams = useMemo(() => {
-    if (
-      teamResult?.teamSize === teamSize &&
-      teamResult.participantKey === participantKey
-    ) {
-      return teamResult.teams;
-    }
+  // Anzeige-Teams: Mitglieder, die die Session verlassen haben, ausblenden.
+  // Endgültig aus dem State entfernt werden sie beim nächsten Auslosen.
+  const displayTeams = useMemo(
+    () =>
+      teams.map((team) => ({
+        ...team,
+        members: team.members.filter((member) => liveIds.has(member.uuid)),
+      })),
+    [teams, liveIds],
+  );
 
-    return [];
-  }, [participantKey, teamResult, teamSize]);
+  const assignedIds = useMemo(
+    () =>
+      new Set(
+        displayTeams.flatMap((team) =>
+          team.members.map((member) => member.uuid),
+        ),
+      ),
+    [displayTeams],
+  );
+  const poolParticipants = useMemo(
+    () =>
+      participants.filter((participant) => !assignedIds.has(participant.uuid)),
+    [participants, assignedIds],
+  );
   const assignedTopicIds = useMemo(
     () =>
       new Set(
-        teams
+        displayTeams
           .map((team) => team.topic?.id)
           .filter((topicId): topicId is string => Boolean(topicId)),
       ),
-    [teams],
+    [displayTeams],
   );
   const unassignedTopics = useMemo(
     () => topics.filter((topic) => !assignedTopicIds.has(topic.id)),
     [assignedTopicIds, topics],
   );
-  const freeTeamCount = teams.filter((team) => !team.topic).length;
+  const freeTeamCount = displayTeams.filter((team) => !team.topic).length;
 
   useEffect(() => {
     return () => {
@@ -1024,18 +1050,15 @@ function TeamDrawMode({
       return;
     }
 
-    const normalizedTeamSize = clampTeamSize(teamSize);
+    const size = clampTeamSize(teamSize);
 
-    setTeamSizeInput(String(normalizedTeamSize));
-    setTeamResult(null);
+    setTeamSizeInput(String(size));
     setIsDrawing(true);
 
     window.setTimeout(() => {
-      setTeamResult({
-        participantKey,
-        teamSize: normalizedTeamSize,
-        teams: createTeams(participants, normalizedTeamSize),
-      });
+      setTeams((previousTeams) =>
+        distributeTeams(previousTeams, participants, fixedIds, size),
+      );
       setIsDrawing(false);
     }, 2300);
   }
@@ -1052,13 +1075,57 @@ function TeamDrawMode({
 
   function updateTeamSizeInput(value: string) {
     setTeamSizeInput(value);
-    setTeamResult(null);
-    setAnimatedTopicIds(new Set());
+  }
+
+  function addEmptyTeam() {
+    setTeams((previousTeams) => [
+      ...previousTeams,
+      {
+        id: createLocalId(`team-${previousTeams.length + 1}`),
+        members: [],
+        locked: false,
+      },
+    ]);
+  }
+
+  function deleteTeam(teamId: string) {
+    const team = teams.find((currentTeam) => currentTeam.id === teamId);
+
+    setTeams((previousTeams) =>
+      previousTeams.filter((currentTeam) => currentTeam.id !== teamId),
+    );
+
+    if (team) {
+      setFixedIds((previousFixed) => {
+        const nextFixed = new Set(previousFixed);
+        team.members.forEach((member) => nextFixed.delete(member.uuid));
+        return nextFixed;
+      });
+    }
+  }
+
+  function toggleTeamLock(teamId: string) {
+    setTeams((previousTeams) =>
+      previousTeams.map((team) =>
+        team.id === teamId ? { ...team, locked: !team.locked } : team,
+      ),
+    );
+  }
+
+  function toggleFix(participantUuid: string) {
+    setFixedIds((previousFixed) => {
+      const nextFixed = new Set(previousFixed);
+      if (nextFixed.has(participantUuid)) {
+        nextFixed.delete(participantUuid);
+      } else {
+        nextFixed.add(participantUuid);
+      }
+      return nextFixed;
+    });
   }
 
   async function handleDeleteParticipant(participantUuid: string) {
     await onDeleteParticipant(participantUuid);
-    setTeamResult(null);
   }
 
   function addTopic() {
@@ -1082,18 +1149,11 @@ function TeamDrawMode({
     setTopics((currentTopics) =>
       currentTopics.filter((topic) => topic.id !== topicId),
     );
-    setTeamResult((currentResult) => {
-      if (!currentResult) {
-        return currentResult;
-      }
-
-      return {
-        ...currentResult,
-        teams: currentResult.teams.map((team) =>
-          team.topic?.id === topicId ? { ...team, topic: undefined } : team,
-        ),
-      };
-    });
+    setTeams((previousTeams) =>
+      previousTeams.map((team) =>
+        team.topic?.id === topicId ? { ...team, topic: undefined } : team,
+      ),
+    );
   }
 
   function assignTopicToTeam(topicId: string, teamId: string) {
@@ -1103,87 +1163,92 @@ function TeamDrawMode({
       return;
     }
 
-    setTeamResult((currentResult) => {
-      if (!currentResult) {
-        return currentResult;
-      }
+    setTeams((previousTeams) =>
+      previousTeams.map((team) => {
+        if (team.id === teamId) {
+          return { ...team, topic };
+        }
 
-      return {
-        ...currentResult,
-        teams: currentResult.teams.map((team) => {
-          if (team.id === teamId) {
-            return {
-              ...team,
-              topic,
-            };
-          }
+        if (team.topic?.id === topicId) {
+          return { ...team, topic: undefined };
+        }
 
-          if (team.topic?.id === topicId) {
-            return {
-              ...team,
-              topic: undefined,
-            };
-          }
-
-          return team;
-        }),
-      };
-    });
+        return team;
+      }),
+    );
   }
 
   function unassignTopic(topicId: string) {
-    setTeamResult((currentResult) => {
-      if (!currentResult) {
-        return currentResult;
-      }
-
-      return {
-        ...currentResult,
-        teams: currentResult.teams.map((team) =>
-          team.topic?.id === topicId ? { ...team, topic: undefined } : team,
-        ),
-      };
-    });
+    setTeams((previousTeams) =>
+      previousTeams.map((team) =>
+        team.topic?.id === topicId ? { ...team, topic: undefined } : team,
+      ),
+    );
   }
 
   function moveParticipantToTeam(participantUuid: string, teamId: string) {
-    setTeamResult((currentResult) => {
-      if (!currentResult) {
-        return currentResult;
+    const participant = participants.find(
+      (currentParticipant) => currentParticipant.uuid === participantUuid,
+    );
+
+    if (!participant) {
+      return;
+    }
+
+    setTeams((previousTeams) => {
+      const targetTeam = previousTeams.find((team) => team.id === teamId);
+
+      if (!targetTeam || targetTeam.locked) {
+        return previousTeams;
       }
 
-      const sourceTeam = currentResult.teams.find((team) =>
+      const sourceTeam = previousTeams.find((team) =>
         team.members.some((member) => member.uuid === participantUuid),
       );
-      const targetTeam = currentResult.teams.find((team) => team.id === teamId);
-      const participant = sourceTeam?.members.find(
-        (member) => member.uuid === participantUuid,
-      );
 
-      if (!sourceTeam || !targetTeam || !participant || sourceTeam.id === targetTeam.id) {
-        return currentResult;
+      if (sourceTeam?.locked || sourceTeam?.id === teamId) {
+        return previousTeams;
       }
 
-      return {
-        ...currentResult,
-        teams: currentResult.teams.map((team) => {
-          if (team.id === sourceTeam.id) {
-            return {
-              ...team,
-              members: team.members.filter((member) => member.uuid !== participantUuid),
-            };
-          }
+      return previousTeams.map((team) => {
+        if (team.id === teamId) {
+          return { ...team, members: [...team.members, participant] };
+        }
 
-          if (team.id === targetTeam.id) {
-            return {
-              ...team,
-              members: [...team.members, participant],
-            };
-          }
+        if (team.members.some((member) => member.uuid === participantUuid)) {
+          return {
+            ...team,
+            members: team.members.filter(
+              (member) => member.uuid !== participantUuid,
+            ),
+          };
+        }
 
-          return team;
-        }),
-      };
+        return team;
+      });
+    });
+  }
+
+  function returnParticipantToPool(participantUuid: string) {
+    setTeams((previousTeams) =>
+      previousTeams.map((team) =>
+        team.locked
+          ? team
+          : {
+              ...team,
+              members: team.members.filter(
+                (member) => member.uuid !== participantUuid,
+              ),
+            },
+      ),
+    );
+    setFixedIds((previousFixed) => {
+      if (!previousFixed.has(participantUuid)) {
+        return previousFixed;
+      }
+      const nextFixed = new Set(previousFixed);
+      nextFixed.delete(participantUuid);
+      return nextFixed;
     });
   }
 
@@ -1200,7 +1265,11 @@ function TeamDrawMode({
   }
 
   function randomAssignTopics() {
-    if (teams.length === 0 || unassignedTopics.length === 0 || freeTeamCount === 0) {
+    if (
+      teams.length === 0 ||
+      unassignedTopics.length === 0 ||
+      freeTeamCount === 0
+    ) {
       return;
     }
 
@@ -1222,25 +1291,12 @@ function TeamDrawMode({
       assignments.map((assignment) => [assignment.teamId, assignment.topic]),
     );
 
-    setTeamResult((currentResult) => {
-      if (!currentResult) {
-        return currentResult;
-      }
-
-      return {
-        ...currentResult,
-        teams: currentResult.teams.map((team) => {
-          const topic = assignmentByTeamId.get(team.id);
-
-          return topic
-            ? {
-                ...team,
-                topic,
-              }
-            : team;
-        }),
-      };
-    });
+    setTeams((previousTeams) =>
+      previousTeams.map((team) => {
+        const topic = assignmentByTeamId.get(team.id);
+        return topic ? { ...team, topic } : team;
+      }),
+    );
     markAnimatedTopics(assignments.map((assignment) => assignment.topic.id));
   }
 
@@ -1262,9 +1318,9 @@ function TeamDrawMode({
 
     if (activeId.startsWith("participant:")) {
       const participantUuid = activeId.replace("participant:", "");
-      const participant = teams
-        .flatMap((team) => team.members)
-        .find((member) => member.uuid === participantUuid);
+      const participant = participants.find(
+        (currentParticipant) => currentParticipant.uuid === participantUuid,
+      );
 
       if (participant) {
         setActiveDrag({
@@ -1297,13 +1353,21 @@ function TeamDrawMode({
       if (overId.startsWith("team:")) {
         assignTopicToTeam(topicId, overId.replace("team:", ""));
       }
+
+      return;
     }
 
-    if (activeId.startsWith("participant:") && overId.startsWith("team:")) {
-      moveParticipantToTeam(
-        activeId.replace("participant:", ""),
-        overId.replace("team:", ""),
-      );
+    if (activeId.startsWith("participant:")) {
+      const participantUuid = activeId.replace("participant:", "");
+
+      if (overId === "member-pool") {
+        returnParticipantToPool(participantUuid);
+        return;
+      }
+
+      if (overId.startsWith("team:")) {
+        moveParticipantToTeam(participantUuid, overId.replace("team:", ""));
+      }
     }
   }
 
@@ -1326,9 +1390,13 @@ function TeamDrawMode({
               <Maximize2 size={18} />
             </button>
             <TeamGrid
-              teams={teams}
+              teams={displayTeams}
               interactive
+              fixedIds={fixedIds}
               animatedTopicIds={animatedTopicIds}
+              onToggleLock={toggleTeamLock}
+              onToggleFix={toggleFix}
+              onDeleteTeam={deleteTeam}
             />
           </div>
         ) : (
@@ -1370,7 +1438,7 @@ function TeamDrawMode({
               </button>
             </div>
 
-            <TeamGrid teams={teams} variant="fullscreen" />
+            <TeamGrid teams={displayTeams} variant="fullscreen" fixedIds={fixedIds} />
           </div>
         </div>
       )}
@@ -1405,11 +1473,35 @@ function TeamDrawMode({
             >
               <Users size={20} />
               {teams.length > 0
-                ? "Teams neu auslosen"
+                ? "Freien Rest neu auslosen"
                 : isDrawing
                   ? "Auslosung..."
                   : "Teams auslosen"}
             </button>
+
+            <button
+              type="button"
+              onClick={addEmptyTeam}
+              className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded border border-white/15 bg-black/20 px-4 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10"
+            >
+              <UserPlus size={17} />
+              Leeres Team hinzufügen
+            </button>
+
+            <p className="mt-3 text-xs leading-relaxed text-white/50">
+              Personen in ein Team ziehen und per Pin fixieren – beim Auslosen
+              bleiben Fixierte an ihrem Platz, nur der freie Rest wird verteilt.
+              Ganze Teams lassen sich sperren.
+            </p>
+          </AccordionSection>
+
+          <AccordionSection
+            title="Nicht zugeteilt"
+            badge={String(poolParticipants.length)}
+            isOpen={openSections.pool}
+            onToggle={() => toggleSection("pool")}
+          >
+            <MemberPool participants={poolParticipants} disabled={isDrawing} />
           </AccordionSection>
 
           <AccordionSection
@@ -1507,11 +1599,19 @@ function TeamGrid({
   variant = "stage",
   interactive = false,
   animatedTopicIds = new Set(),
+  fixedIds = new Set(),
+  onToggleLock,
+  onToggleFix,
+  onDeleteTeam,
 }: {
   teams: Team[];
   variant?: "stage" | "fullscreen";
   interactive?: boolean;
   animatedTopicIds?: Set<string>;
+  fixedIds?: Set<string>;
+  onToggleLock?: (teamId: string) => void;
+  onToggleFix?: (participantUuid: string) => void;
+  onDeleteTeam?: (teamId: string) => void;
 }) {
   const isFullscreen = variant === "fullscreen";
 
@@ -1533,6 +1633,10 @@ function TeamGrid({
           isTopicAnimated={Boolean(
             team.topic && animatedTopicIds.has(team.topic.id),
           )}
+          fixedIds={fixedIds}
+          onToggleLock={onToggleLock}
+          onToggleFix={onToggleFix}
+          onDeleteTeam={onDeleteTeam}
         />
       ))}
     </div>
@@ -1545,36 +1649,80 @@ function TeamCard({
   isFullscreen,
   interactive,
   isTopicAnimated,
+  fixedIds,
+  onToggleLock,
+  onToggleFix,
+  onDeleteTeam,
 }: {
   team: Team;
   index: number;
   isFullscreen: boolean;
   interactive: boolean;
   isTopicAnimated: boolean;
+  fixedIds: Set<string>;
+  onToggleLock?: (teamId: string) => void;
+  onToggleFix?: (participantUuid: string) => void;
+  onDeleteTeam?: (teamId: string) => void;
 }) {
   const TeamIcon = teamIcons[index % teamIcons.length];
   const { isOver, setNodeRef } = useDroppable({
     id: `team:${team.id}`,
-    disabled: !interactive,
+    disabled: !interactive || team.locked,
   });
 
   return (
     <div
       ref={setNodeRef}
       className={`team-card-reveal rounded border shadow-2xl backdrop-blur transition ${
-        isOver
-          ? "border-amber-200/80 bg-amber-200/15"
-          : "border-cyan-200/25 bg-cyan-100/10"
+        team.locked
+          ? "border-amber-200/50 bg-amber-200/5"
+          : isOver
+            ? "border-cyan-200/80 bg-cyan-200/15"
+            : "border-cyan-200/25 bg-cyan-100/10"
       } ${isFullscreen ? "p-5" : "p-4"}`}
       style={{ animationDelay: `${index * 0.08}s` }}
     >
-      <div
-        className={`flex items-center gap-2 font-bold uppercase tracking-[0.16em] text-cyan-100 ${
-          isFullscreen ? "text-base" : "text-sm"
-        }`}
-      >
-        <TeamIcon size={isFullscreen ? 21 : 17} />
-        Team {index + 1}
+      <div className="flex items-center justify-between gap-2">
+        <div
+          className={`flex items-center gap-2 font-bold uppercase tracking-[0.16em] text-cyan-100 ${
+            isFullscreen ? "text-base" : "text-sm"
+          }`}
+        >
+          <TeamIcon size={isFullscreen ? 21 : 17} />
+          Team {index + 1}
+          {team.locked && (
+            <Lock size={13} className="text-amber-200" />
+          )}
+        </div>
+
+        {interactive && (
+          <div className="flex items-center gap-1">
+            {onToggleLock && (
+              <button
+                type="button"
+                onClick={() => onToggleLock(team.id)}
+                title={team.locked ? "Team entsperren" : "Team sperren"}
+                className={`flex h-7 w-7 items-center justify-center rounded border transition ${
+                  team.locked
+                    ? "border-amber-200/50 bg-amber-200/20 text-amber-100"
+                    : "border-white/15 bg-white/5 text-white/60 hover:bg-white/15"
+                }`}
+              >
+                {team.locked ? <Lock size={14} /> : <LockOpen size={14} />}
+              </button>
+            )}
+            {onDeleteTeam && !team.locked && (
+              <button
+                type="button"
+                onClick={() => onDeleteTeam(team.id)}
+                title="Team auflösen"
+                className="flex h-7 w-7 items-center justify-center rounded border border-red-300/20 bg-red-500/15 text-red-100 transition hover:bg-red-500/25"
+              >
+                <Trash2 size={14} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="mt-3 min-h-12 rounded border border-amber-200/25 bg-amber-200/10 p-2">
@@ -1598,8 +1746,12 @@ function TeamCard({
           <DraggableParticipant
             key={participant.uuid}
             participant={participant}
-            disabled={!interactive}
+            disabled={!interactive || team.locked}
             isFullscreen={isFullscreen}
+            fixed={fixedIds.has(participant.uuid)}
+            onToggleFix={
+              interactive && !team.locked ? onToggleFix : undefined
+            }
           />
         ))}
 
@@ -1675,10 +1827,14 @@ function DraggableParticipant({
   participant,
   disabled,
   isFullscreen,
+  fixed = false,
+  onToggleFix,
 }: {
   participant: Participant;
   disabled: boolean;
   isFullscreen: boolean;
+  fixed?: boolean;
+  onToggleFix?: (participantUuid: string) => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -1695,9 +1851,11 @@ function DraggableParticipant({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-2 rounded bg-black/20 px-3 font-semibold transition ${
-        isFullscreen ? "py-3 text-lg" : "py-2"
-      } ${isDragging ? "opacity-35" : ""}`}
+      className={`flex items-center gap-2 rounded px-3 font-semibold transition ${
+        fixed ? "bg-amber-300/15 ring-1 ring-amber-200/40" : "bg-black/20"
+      } ${isFullscreen ? "py-3 text-lg" : "py-2"} ${
+        isDragging ? "opacity-35" : ""
+      }`}
     >
       <button
         type="button"
@@ -1709,7 +1867,60 @@ function DraggableParticipant({
       >
         <GripVertical size={15} />
       </button>
-      <span className="min-w-0 break-words">{participant.name}</span>
+      <span className="min-w-0 flex-1 break-words">{participant.name}</span>
+      {onToggleFix && (
+        <button
+          type="button"
+          onClick={() => onToggleFix(participant.uuid)}
+          title={fixed ? "Fixierung aufheben" : "In diesem Team fixieren"}
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded border transition ${
+            fixed
+              ? "border-amber-200/50 bg-amber-200/20 text-amber-100"
+              : "border-white/15 bg-white/5 text-white/60 hover:bg-white/15"
+          }`}
+        >
+          {fixed ? <Pin size={14} /> : <PinOff size={14} />}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MemberPool({
+  participants,
+  disabled,
+}: {
+  participants: Participant[];
+  disabled: boolean;
+}) {
+  const { isOver, setNodeRef } = useDroppable({
+    id: "member-pool",
+    disabled,
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`flex flex-wrap gap-2 rounded border p-2 transition ${
+        isOver
+          ? "border-cyan-200/70 bg-cyan-200/15"
+          : "border-white/10 bg-black/15"
+      }`}
+    >
+      {participants.map((participant) => (
+        <DraggableParticipant
+          key={participant.uuid}
+          participant={participant}
+          disabled={disabled}
+          isFullscreen={false}
+        />
+      ))}
+
+      {participants.length === 0 && (
+        <p className="w-full rounded border border-dashed border-white/15 p-3 text-center text-sm text-white/55">
+          Alle Personen sind einem Team zugeteilt.
+        </p>
+      )}
     </div>
   );
 }
@@ -1822,32 +2033,82 @@ function getRocketStyle(index: number, isDrawing: boolean) {
   } as CSSProperties & Record<string, string>;
 }
 
-function createTeams(participants: Participant[], teamSize: number): Team[] {
-  const shuffledParticipants = shuffleParticipants(participants);
-  const normalizedTeamSize = clampTeamSize(teamSize);
-  const memberGroups: Participant[][] = [];
+// Verteilt die freien Personen auf freie Plätze und lässt gesperrte Teams sowie
+// fixierte Mitglieder unangetastet ("Lock & Draw Remainder").
+function distributeTeams(
+  previousTeams: Team[],
+  participants: Participant[],
+  fixedIds: Set<string>,
+  teamSize: number,
+): Team[] {
+  const size = clampTeamSize(teamSize);
+  const liveIds = new Set(participants.map((participant) => participant.uuid));
 
-  for (let index = 0; index < shuffledParticipants.length; index += normalizedTeamSize) {
-    memberGroups.push(shuffledParticipants.slice(index, index + normalizedTeamSize));
+  // Gesperrte Teams bleiben komplett; bei offenen Teams nur Fixierte behalten.
+  const keptTeams = previousTeams.map((team) => {
+    if (team.locked) {
+      return team;
+    }
+    return {
+      ...team,
+      members: team.members.filter(
+        (member) => fixedIds.has(member.uuid) && liveIds.has(member.uuid),
+      ),
+    };
+  });
+
+  const assigned = new Set(
+    keptTeams.flatMap((team) => team.members.map((member) => member.uuid)),
+  );
+  const freePool = shuffleItems(
+    participants.filter((participant) => !assigned.has(participant.uuid)),
+  );
+
+  // Offene Teams bis zur Teamgröße auffüllen.
+  const filledTeams = keptTeams.map((team) => {
+    if (team.locked) {
+      return team;
+    }
+    const need = Math.max(0, size - team.members.length);
+    const additions = freePool.splice(0, need);
+    return { ...team, members: [...team.members, ...additions] };
+  });
+
+  // Restlichen Pool in neue Teams aufteilen.
+  const newTeams: Team[] = [];
+  for (let index = 0; index < freePool.length; index += size) {
+    newTeams.push({
+      id: createLocalId(`team-${filledTeams.length + newTeams.length + 1}`),
+      members: freePool.slice(index, index + size),
+      locked: false,
+    });
   }
 
-  if (memberGroups.length > 1 && memberGroups[memberGroups.length - 1].length === 1) {
-    const singletonTeam = memberGroups.pop();
-    const lastParticipant = singletonTeam?.[0];
-
-    if (lastParticipant) {
-      memberGroups[memberGroups.length - 1].push(lastParticipant);
+  // Einzelne übrig gebliebene Person sinnvoll unterbringen.
+  if (newTeams.length > 0) {
+    const lastTeam = newTeams[newTeams.length - 1];
+    if (lastTeam.members.length === 1) {
+      if (newTeams.length > 1) {
+        newTeams[newTeams.length - 2].members.push(...lastTeam.members);
+        newTeams.pop();
+      } else {
+        const target = [...filledTeams]
+          .reverse()
+          .find((team) => !team.locked && team.members.length > 0);
+        if (target) {
+          target.members.push(...lastTeam.members);
+          newTeams.pop();
+        }
+      }
     }
   }
 
-  return memberGroups.map((members, index) => ({
-    id: createLocalId(`team-${index + 1}`),
-    members,
-  }));
-}
+  // Leere, offene Teams ohne Thema entfernen (Aufräumen nach dem Auslosen).
+  const cleanedTeams = filledTeams.filter(
+    (team) => team.locked || team.members.length > 0 || Boolean(team.topic),
+  );
 
-function shuffleParticipants(participants: Participant[]) {
-  return shuffleItems(participants);
+  return [...cleanedTeams, ...newTeams];
 }
 
 function shuffleItems<T>(items: T[]) {
