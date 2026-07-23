@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      # Dummy-URL: src/lib/prisma.ts parst DATABASE_URL beim Modul-Load.
+      # Es wird keine echte DB-Verbindung aufgebaut (Build/Test verbinden nicht).
+      DATABASE_URL: "mysql://build:build@127.0.0.1:3306/build"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Prisma-Client generieren
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
