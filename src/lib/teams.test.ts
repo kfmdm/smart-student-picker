@@ -130,6 +130,60 @@ describe("distributeTeams – Lock & Fix", () => {
   });
 });
 
+describe("distributeTeams – fachliche Kernszenarien", () => {
+  it("Halb-Team: 2 fixierte Personen bleiben zusammen und das Team wird auf die Teamgröße aufgefüllt", () => {
+    // Genau der Wunschfall: 2 wollen zusammen, Team braucht 6.
+    const participants = makeParticipants(10);
+    const [p1, p2] = participants;
+    const halfTeam: Team = { id: "H", members: [p1, p2], locked: false };
+
+    const teams = distributeTeams(
+      [halfTeam],
+      participants,
+      new Set(["p1", "p2"]),
+      6,
+    );
+
+    const h = teams.find((team) => team.id === "H");
+    expect(h?.members.map((m) => m.uuid)).toContain("p1");
+    expect(h?.members.map((m) => m.uuid)).toContain("p2");
+    expect(h?.members).toHaveLength(6);
+    // alle 10 genau einmal
+    expect(allMemberIds(teams).sort()).toEqual(
+      makeParticipants(10).map((p) => p.uuid).sort(),
+    );
+  });
+
+  it("kein Team wird größer als die Teamgröße (außer der Singleton-Zusammenlegung)", () => {
+    // 9 Personen, Größe 4 -> [4,4,1] -> Singleton in vorletztes -> [4,5]
+    const teams = distributeTeams([], makeParticipants(9), new Set(), 4);
+    expect(teams.every((team) => team.members.length <= 5)).toBe(true);
+    // ohne Singleton-Fall exakt Größe eingehalten
+    const clean = distributeTeams([], makeParticipants(8), new Set(), 4);
+    expect(clean.every((team) => team.members.length <= 4)).toBe(true);
+  });
+
+  it("respektiert mehrere fixierte Personen in verschiedenen Teams gleichzeitig", () => {
+    const participants = makeParticipants(8);
+    const [p1, , p3] = participants;
+    const teamA: Team = { id: "A", members: [p1], locked: false };
+    const teamB: Team = { id: "B", members: [p3], locked: false };
+
+    const teams = distributeTeams(
+      [teamA, teamB],
+      participants,
+      new Set(["p1", "p3"]),
+      2,
+    );
+
+    expect(teams.find((t) => t.id === "A")?.members.some((m) => m.uuid === "p1")).toBe(true);
+    expect(teams.find((t) => t.id === "B")?.members.some((m) => m.uuid === "p3")).toBe(true);
+    expect(allMemberIds(teams).sort()).toEqual(
+      makeParticipants(8).map((p) => p.uuid).sort(),
+    );
+  });
+});
+
 describe("distributeTeams – Themen & leere Teams", () => {
   it("behält zugewiesene Themen über das Auslosen hinweg", () => {
     const participants = makeParticipants(4);

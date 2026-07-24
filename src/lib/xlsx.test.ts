@@ -1,5 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { rowsToFairness } from "@/lib/xlsx";
+import { fairnessToRows, rowsToFairness } from "@/lib/xlsx";
+import type { FairnessMemory } from "@/lib/fairness";
+
+describe("Export -> Import Round-Trip", () => {
+  it("stellt das Gedächtnis verlustfrei wieder her", () => {
+    const memory: FairnessMemory = {
+      alice: { name: "Alice", presented: false, credit: 4, attempts: 2 },
+      bob: { name: "Bob", presented: true, credit: 0, attempts: 5 },
+      cara: { name: "Cara", presented: false, credit: 1, attempts: 1 },
+    };
+    expect(rowsToFairness(fairnessToRows(memory))).toEqual(memory);
+  });
+});
 
 describe("rowsToFairness", () => {
   it("mappt typisierte Zellen (Boolean/Number) korrekt", () => {

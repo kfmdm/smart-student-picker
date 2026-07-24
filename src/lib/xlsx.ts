@@ -67,18 +67,15 @@ export function rowsToFairness(rows: Cell[][]): FairnessMemory {
   return memory;
 }
 
-// Browser-Export: lädt die xlsx-Datei herunter.
-export async function exportFairnessWorkbook(
+// Fairness-Gedächtnis -> Tabellenzeilen (Header + Daten). Rein/testbar.
+export function fairnessToRows(
   memory: FairnessMemory,
-  fileName: string,
-): Promise<void> {
-  const XLSX = await import("xlsx");
-
+): (string | number | boolean)[][] {
   const records = Object.values(memory).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
 
-  const rows: (string | number | boolean)[][] = [
+  return [
     [HEADERS.name, HEADERS.presented, HEADERS.credit, HEADERS.attempts],
     ...records.map((record: FairnessRecord) => [
       record.name,
@@ -87,8 +84,16 @@ export async function exportFairnessWorkbook(
       record.attempts,
     ]),
   ];
+}
 
-  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+// Browser-Export: lädt die xlsx-Datei herunter.
+export async function exportFairnessWorkbook(
+  memory: FairnessMemory,
+  fileName: string,
+): Promise<void> {
+  const XLSX = await import("xlsx");
+
+  const worksheet = XLSX.utils.aoa_to_sheet(fairnessToRows(memory));
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Fairness");
   XLSX.writeFile(workbook, fileName);

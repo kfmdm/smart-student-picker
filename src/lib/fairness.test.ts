@@ -139,6 +139,54 @@ describe("applyRoundResult", () => {
   });
 });
 
+// Zusammengesetzte fachliche Eigenschaften (nicht nur Einzelbausteine).
+describe("Fachliche Fairness-Eigenschaften", () => {
+  it("erhöht die Chance mit jeder erfolglosen Meldung (mehr Guthaben = mehr Gewicht)", () => {
+    let memory: FairnessMemory = {};
+    // Bob meldet sich 3x, gewinnt nie (jemand anderes gewinnt).
+    for (let round = 0; round < 3; round += 1) {
+      memory = applyRoundResult(memory, {
+        winnerName: "Andere",
+        volunteerNames: ["Andere", "Bob"],
+        difficulty: 1,
+      });
+    }
+    const bobWeight = drawWeight(getRecord(memory, "Bob"));
+    const newcomerWeight = drawWeight(getRecord(memory, "Neu"));
+
+    expect(getRecord(memory, "Bob").attempts).toBe(3);
+    expect(bobWeight).toBeGreaterThan(newcomerWeight);
+    // strikt monoton: nach mehr Meldungen höheres Gewicht
+    expect(bobWeight).toBe(1 + 3); // 3x difficulty 1
+  });
+
+  it("erhöht die Chance bei schwerer Aufgabe stärker als bei leichter", () => {
+    // Zwei Personen, je 1x erfolglos – aber unterschiedliche Schwierigkeit.
+    const afterEasy = applyRoundResult(
+      {},
+      { winnerName: "W", volunteerNames: ["W", "Leicht"], difficulty: 1 },
+    );
+    const afterHard = applyRoundResult(
+      {},
+      { winnerName: "W", volunteerNames: ["W", "Schwer"], difficulty: 3 },
+    );
+
+    const easyWeight = drawWeight(getRecord(afterEasy, "Leicht"));
+    const hardWeight = drawWeight(getRecord(afterHard, "Schwer"));
+
+    expect(hardWeight).toBeGreaterThan(easyWeight);
+  });
+
+  it("nimmt vorgetragene Personen dauerhaft aus dem Pool", () => {
+    const memory = applyRoundResult(
+      {},
+      { winnerName: "Gewinner", volunteerNames: ["Gewinner", "X"], difficulty: 2 },
+    );
+    // Gewinner hat zwar evtl. Guthaben gehabt, ist aber jetzt raus.
+    expect(drawWeight(getRecord(memory, "Gewinner"))).toBe(0);
+  });
+});
+
 describe("resetPresented", () => {
   it("setzt das presented-Flag zurück", () => {
     const memory: FairnessMemory = {
