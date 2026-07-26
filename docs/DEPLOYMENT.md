@@ -9,9 +9,12 @@ Prisma wird hier nur als typisierter Client für rohes SQL genutzt; das Schema l
 - `database/migrations/001_add_team_draw.sql` – erweitert `sessions.type` um `team_draw`
   und ergänzt die `settings`-JSON-Spalte.
 
-Migration einspielen:
+Schema einspielen (neue Umgebung):
 
 ```bash
+# Basis-Tabellen (idempotent)
+mysql -h <host> -u <user> -p <database> < database/schema.sql
+# optionale Migration (falls von einem älteren Stand migriert wird)
 mysql -h <host> -u <user> -p <database> < database/migrations/001_add_team_draw.sql
 ```
 

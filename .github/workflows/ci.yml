@@ -34,6 +34,58 @@ jobs:
       - name: Build
         run: npm run build
 
+  e2e:
+    needs: verify
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.6
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: ssp_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DATABASE_URL: "mysql://root:root@127.0.0.1:3306/ssp_test"
+      E2E_DATABASE_URL: "mysql://root:root@127.0.0.1:3306/ssp_test"
+      E2E_ADMIN_PASSWORD: "e2e-secret"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: DB-Schema einspielen
+        run: mysql -h 127.0.0.1 -u root -proot ssp_test < database/schema.sql
+
+      - name: Prisma-Client generieren
+        run: npx prisma generate
+
+      - name: Playwright-Browser installieren
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E-Tests
+        run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
   docker:
     # Image nur bei Pushes bauen/pushen (nicht bei PRs – dort fehlen die Secrets).
     if: github.event_name == 'push'
