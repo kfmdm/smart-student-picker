@@ -58,6 +58,7 @@ import {
 } from "@/lib/sessionTypes";
 import {
   Check,
+  Copy,
   Download,
   Gauge,
   Lock,
@@ -88,6 +89,7 @@ import {
   saveJSON,
 } from "@/lib/clientStore";
 import { createLocalId, distributeTeams, shuffleItems } from "@/lib/teams";
+import { QRCode } from "react-qrcode-logo";
 
 type Participant = {
   uuid: string;
@@ -456,26 +458,72 @@ export default function SessionLiveStage({ sessionUuid }: SessionLiveStageProps)
 }
 
 function StageTitle({ session }: { session: Session | null }) {
+  const [linkCopied, setLinkCopied] = useState(false);
+  const registerUrl =
+    typeof window !== "undefined" && session
+      ? `${window.location.origin}/register/${session.uuid}`
+      : "";
+
+  const handleCopyLink = async () => {
+    if (!registerUrl) return;
+    try {
+      await navigator.clipboard.writeText(registerUrl);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1500);
+    } catch {
+      // clipboard access can be denied by the browser; button just stays as-is
+    }
+  };
+
   return (
-    <>
-      <div className="flex flex-wrap items-center gap-3 text-sm uppercase tracking-[0.18em] text-cyan-100">
-        <Sparkles size={18} />
-        Bewerbungsflug
+    <div className="flex flex-wrap items-start justify-between gap-6">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-3 text-sm uppercase tracking-[0.18em] text-cyan-100">
+          <Sparkles size={18} />
+          Bewerbungsflug
+        </div>
+
+        <h1 className="mt-3 max-w-3xl text-balance text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">
+          {session?.name ?? "Session wird geladen"}
+        </h1>
+
+        <div className="mt-5 flex flex-wrap gap-3 text-sm">
+          <span className="rounded border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-cyan-50">
+            Typ: {getSessionTypeLabel(session?.type ?? DEFAULT_SESSION_TYPE)}
+          </span>
+          <span className="rounded border border-emerald-200/30 bg-emerald-200/10 px-3 py-1 text-emerald-50">
+            Status: {session?.status ?? "..."}
+          </span>
+        </div>
       </div>
 
-      <h1 className="mt-4 max-w-5xl text-balance text-5xl font-black leading-tight sm:text-6xl lg:text-8xl">
-        {session?.name ?? "Session wird geladen"}
-      </h1>
-
-      <div className="mt-5 flex flex-wrap gap-3 text-sm">
-        <span className="rounded border border-cyan-200/30 bg-cyan-200/10 px-3 py-1 text-cyan-50">
-          Typ: {getSessionTypeLabel(session?.type ?? DEFAULT_SESSION_TYPE)}
-        </span>
-        <span className="rounded border border-emerald-200/30 bg-emerald-200/10 px-3 py-1 text-emerald-50">
-          Status: {session?.status ?? "..."}
-        </span>
-      </div>
-    </>
+      {registerUrl && (
+        <div className="mx-auto flex shrink-0 flex-col items-center gap-2 rounded-2xl border border-cyan-200/20 bg-white p-3 shadow-[0_0_24px_-4px_rgba(103,232,249,0.35)] sm:mx-0">
+          <QRCode
+            value={registerUrl}
+            size={104}
+            quietZone={8}
+            qrStyle="dots"
+            eyeRadius={8}
+            fgColor="#0f172a"
+            bgColor="#ffffff"
+            ecLevel="M"
+          />
+          <button
+            type="button"
+            onClick={handleCopyLink}
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-medium text-slate-600 transition hover:bg-slate-100"
+          >
+            {linkCopied ? (
+              <Check size={13} className="text-emerald-600" />
+            ) : (
+              <Copy size={13} />
+            )}
+            {linkCopied ? "Kopiert" : "Link kopieren"}
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
