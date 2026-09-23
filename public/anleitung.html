@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Student Picker – Bedienungsanleitung</title>
+<style>
+  :root {
+    --ink: #1c1f2b;
+    --muted: #5b6072;
+    --line: #e1e4ec;
+    --accent: #3355dd;
+    --accent-bg: #eef1ff;
+    --warn-bg: #fff6e5;
+    --warn-line: #f0c869;
+    --code-bg: #f4f5f9;
+    --max: 880px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    line-height: 1.6;
+  }
+  header.title {
+    padding: 56px 24px 40px;
+    background: linear-gradient(180deg, #f7f8fc, #ffffff);
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  header.title h1 { margin: 0 0 8px; font-size: 2.1rem; }
+  header.title p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+  nav.toc {
+    max-width: var(--max);
+    margin: 32px auto;
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--accent-bg);
+  }
+  nav.toc h2 { margin-top: 0; font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  nav.toc ol { margin: 0; padding-left: 1.2em; columns: 2; }
+  nav.toc li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc a { color: var(--accent); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  main { max-width: var(--max); margin: 0 auto; padding: 8px 24px 80px; }
+  section { padding-top: 48px; scroll-margin-top: 16px; }
+  section + section { border-top: 1px solid var(--line); }
+  h2 { font-size: 1.6rem; margin-bottom: 4px; }
+  h2 .kicker { display: block; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  h3 { font-size: 1.15rem; margin-top: 2em; }
+  p { color: #2a2d3a; }
+  code { background: var(--code-bg); padding: .15em .4em; border-radius: 4px; font-size: .92em; }
+  figure { margin: 20px 0 28px; }
+  figure img {
+    max-width: 100%;
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(20,20,40,.08);
+  }
+  figcaption { margin-top: 8px; font-size: .92rem; color: var(--muted); }
+  .steps { padding-left: 1.3em; }
+  .steps li { margin-bottom: .5em; }
+  .callout {
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    background: var(--accent-bg);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 20px 0;
+  }
+  .callout.warn { border-left-color: var(--warn-line); background: var(--warn-bg); }
+  .callout p:last-child { margin-bottom: 0; }
+  .term { margin: 18px 0; padding: 14px 18px; background: var(--code-bg); border-radius: 8px; }
+  .term dt { font-weight: 600; }
+  .term dd { margin: 4px 0 0; color: #2a2d3a; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  th { color: var(--muted); font-weight: 600; }
+  svg.diagram { width: 100%; height: auto; background: #fff; }
+  footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 40px 24px; }
+  a { color: var(--accent); }
+  @media print {
+    nav.toc { break-after: page; }
+    section { break-inside: avoid-page; }
+  }
+</style>
+</head>
+<body>
+
+<header class="title">
+  <h1>Smart Student Picker</h1>
+  <p>Bedienungsanleitung für Dozierende – Aufgaben verlosen und Teams bilden, fair &amp; datensparsam.</p>
+</header>
+
+<nav class="toc">
+  <h2>Inhalt</h2>
+  <ol>
+    <li><a href="#ueberblick">Überblick &amp; Grundprinzip</a></li>
+    <li><a href="#architektur">Wie die App im Hintergrund funktioniert</a></li>
+    <li><a href="#erste-schritte">Erste Schritte: Anmelden</a></li>
+    <li><a href="#sz1">Einzelauslosung (Sz1)</a></li>
+    <li><a href="#sz2">Team-Auslosung (Sz2)</a></li>
+    <li><a href="#einschraenkungen">Bekannte Einschränkungen</a></li>
+    <li><a href="#betrieb">Betrieb &amp; Hosting (Kurzfassung)</a></li>
+    <li><a href="#faq">Häufige Fragen</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="ueberblick">
+  <h2><span class="kicker">Kapitel 1</span>Überblick &amp; Grundprinzip</h2>
+  <p>
+    Der Smart Student Picker ist ein digitales Werkzeug für die Lehrveranstaltung: Studierende
+    melden sich per QR-Code auf ihrem Handy an, und auf dem Beamer läuft eine Live-Bühne
+    („Bewerbungsflug"), auf der die Dozierenden entweder
+  </p>
+  <ul>
+    <li><strong>eine Person auslosen</strong> (z.&nbsp;B. um eine Aufgabe zu vergeben), oder</li>
+    <li><strong>Teams (und optional Themen) bilden</strong></li>
+  </ul>
+  <p>können – live vor der Gruppe, beamer-tauglich und auch am Handy bedienbar.</p>
+
+  <h3>Das Grundprinzip: so wenig Daten wie möglich</h3>
+  <p>
+    Die App ist bewusst <strong>datensparsam</strong> gebaut: Die Namen der Studierenden werden
+    zu keinem Zeitpunkt dauerhaft gespeichert. Sie tauchen nur kurz auf, solange eine Sitzung
+    läuft, und sind danach wieder weg (mehr dazu im nächsten Kapitel). Wer die Ergebnisse über
+    das Semester hinweg behalten möchte, exportiert sie bewusst selbst als Datei (CSV/Excel) –
+    das entscheidet also die Dozentin oder der Dozent, nicht die App automatisch.
+  </p>
+
+  <table>
+    <tr><th></th><th>Sz1 – Einzelauslosung</th><th>Sz2 – Team-Auslosung</th></tr>
+    <tr><td>Zweck</td><td>Eine Person fair auswählen (z.&nbsp;B. für eine Aufgabe/Vortrag)</td><td>Teilnehmende in Teams (+ Themen) einteilen</td></tr>
+    <tr><td>Besonderheit</td><td>„Fair", nicht rein zufällig – wer sich meldet und nicht drankommt, hat beim nächsten Mal bessere Chancen</td><td>Teams/Mitglieder lassen sich sperren bzw. fixieren, nur der Rest wird neu verlost</td></tr>
+  </table>
+</section>
+
+<section id="architektur">
+  <h2><span class="kicker">Kapitel 2</span>Wie die App im Hintergrund funktioniert</h2>
+  <p>
+    Dieses Kapitel richtet sich an alle, die verstehen möchten, was technisch passiert, wenn ein
+    Name auf dem Beamer erscheint – ganz ohne Vorwissen. Die Fachbegriffe aus dem Code werden
+    hier bewusst in Alltagssprache übersetzt.
+  </p>
+
+  <figure>
+    <svg class="diagram" viewBox="0 0 1080 400" xmlns="http://www.w3.org/2000/svg" role="img"
+         aria-label="Architekturdiagramm: Studierende registrieren sich über die Anmelde-Seite beim Server-Programm, das den Namen kurz auf einem Merkzettel im Arbeitsspeicher notiert und live an den Beamer-Bildschirm überträgt. Das Server-Programm speichert außerdem Sitzungs-Infos, aber keine Namen, in der Datenbank.">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#3355dd" />
+        </marker>
+      </defs>
+
+      <!-- Boxen Reihe A -->
+      <g font-family="-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+        <rect x="20" y="40" width="180" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
+        <text x="110" y="80" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Studierende</text>
+        <text x="110" y="100" text-anchor="middle" font-size="12" fill="#5b6072">eigenes Smartphone</text>
+
+        <rect x="230" y="40" width="180" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
+        <text x="320" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Anmelde-Seite</text>
+        <text x="320" y="92" text-anchor="middle" font-size="12" fill="#5b6072">Name eingeben,</text>
+        <text x="320" y="108" text-anchor="middle" font-size="12" fill="#5b6072">per QR-Code geöffnet</text>
+
+        <rect x="440" y="40" width="190" height="100" rx="12" fill="#fff" stroke="#3355dd" stroke-width="2"/>
+        <text x="535" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Server-Programm</text>
+        <text x="535" y="92" text-anchor="middle" font-size="12" fill="#5b6072">ein einziges Programm,</text>
+        <text x="535" y="108" text-anchor="middle" font-size="12" fill="#5b6072">läuft rund um die Uhr</text>
+
+        <rect x="660" y="40" width="190" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
+        <text x="755" y="66" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">Kurzzeitiger</text>
+        <text x="755" y="84" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">Merkzettel</text>
+        <text x="755" y="104" text-anchor="middle" font-size="12" fill="#5b6072">nur im Arbeitsspeicher</text>
+        <text x="755" y="120" text-anchor="middle" font-size="12" fill="#5b6072">(verschwindet danach)</text>
+
+        <rect x="880" y="40" width="180" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
+        <text x="970" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Beamer-Bildschirm</text>
+        <text x="970" y="92" text-anchor="middle" font-size="12" fill="#5b6072">Dozierende sehen</text>
+        <text x="970" y="108" text-anchor="middle" font-size="12" fill="#5b6072">alles live</text>
+
+        <!-- Box Reihe B -->
+        <rect x="440" y="260" width="190" height="100" rx="12" fill="#fbfbfd" stroke="#8a8fa3" stroke-width="1.5"/>
+        <text x="535" y="298" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Datenbank</text>
+        <text x="535" y="318" text-anchor="middle" font-size="12" fill="#5b6072">nur Sitzungs-Infos,</text>
+        <text x="535" y="334" text-anchor="middle" font-size="12" fill="#5b6072">niemals Namen</text>
+
+        <!-- Pfeile Reihe A -->
+        <line x1="202" y1="90" x2="227" y2="90" stroke="#3355dd" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="214" y="76" text-anchor="middle" font-size="11" fill="#3355dd">①</text>
+
+        <line x1="412" y1="90" x2="437" y2="90" stroke="#3355dd" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="424" y="76" text-anchor="middle" font-size="11" fill="#3355dd">②</text>
+
+        <line x1="632" y1="90" x2="657" y2="90" stroke="#3355dd" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="644" y="76" text-anchor="middle" font-size="11" fill="#3355dd">③</text>
+
+        <line x1="852" y1="90" x2="877" y2="90" stroke="#3355dd" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="864" y="76" text-anchor="middle" font-size="11" fill="#3355dd">④</text>
+
+        <!-- Pfeil nach unten zur DB -->
+        <line x1="535" y1="142" x2="535" y2="257" stroke="#8a8fa3" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="548" y="205" font-size="11" fill="#5b6072">⑤</text>
+
+        <!-- Legende der Nummern -->
+        <text x="20" y="380" font-size="12" fill="#2a2d3a">① scannt QR-Code  ② schickt den Namen  ③ trägt Namen kurz ein  ④ Live-Übertragung wie ein Ticker  ⑤ speichert nur Sitzungs-Metadaten</text>
+      </g>
+    </svg>
+    <figcaption>
+      Ablauf, wenn sich jemand anmeldet: vom Smartphone über die Anmelde-Seite und das
+      Server-Programm bis auf den Beamer – Namen selbst landen dabei nie in der Datenbank.
+    </figcaption>
+  </figure>
+
+  <p>Was die Kästen im Diagramm im Alltag bedeuten:</p>
+
+  <dl>
+    <div class="term">
+      <dt>Server-Programm (technisch: „Next.js")</dt>
+      <dd>
+        Die komplette Anwendung – die Seiten, die man im Browser sieht, <em>und</em> das
+        Programm, das im Hintergrund Anfragen beantwortet – läuft als <strong>ein einziges
+        Programm</strong> auf dem Server. Es gibt also kein separates „Backend-System", das
+        getrennt gewartet werden müsste.
+      </dd>
+    </div>
+    <div class="term">
+      <dt>Kurzzeitiger Merkzettel (technisch: „In-Memory Relay")</dt>
+      <dd>
+        Man kann sich das wie ein <strong>Whiteboard im Arbeitsspeicher des Servers</strong>
+        vorstellen: Sobald sich jemand anmeldet, wird der Name kurz dort notiert, damit er sofort
+        auf dem Beamer erscheinen kann. Dieses Whiteboard ist aber flüchtig – es wird nirgends
+        auf die Festplatte geschrieben. Läuft der Server neu an oder wird die Sitzung beendet,
+        ist der Eintrag weg. Genau das ist der Kern des Datensparsamkeits-Prinzips: Namen
+        existieren nur, solange sie gebraucht werden.
+      </dd>
+    </div>
+    <div class="term">
+      <dt>Live-Übertragung wie ein Ticker (technisch: „SSE – Server-Sent Events")</dt>
+      <dd>
+        Der Beamer-Bildschirm hält eine <strong>dauerhaft offene, einseitige Standleitung</strong>
+        zum Server-Programm – ähnlich einem Live-Ticker im Sportformat. Sobald sich jemand neu
+        anmeldet, schickt der Server diese Information sofort durch die offene Leitung. Die
+        Beamer-Seite muss dafür nicht neu geladen werden und fragt auch nicht ständig nach – sie
+        bekommt automatisch Bescheid.
+      </dd>
+    </div>
+    <div class="term">
+      <dt>Datenbank (MariaDB)</dt>
+      <dd>
+        Hier wird ausschließlich gespeichert, <strong>welche Sitzungen es gibt</strong> – Name der
+        Sitzung, Typ (Einzel- oder Team-Auslosung), Einstellungen, Status (aktiv/inaktiv/beendet).
+        Teilnehmernamen stehen hier nie drin.
+      </dd>
+    </div>
+    <div class="term">
+      <dt>Anmelde-Ausweis für Dozierende (technisch: „httpOnly-Cookie")</dt>
+      <dd>
+        Nach der Eingabe des Dozenten-Passworts merkt sich der Browser automatisch einen
+        unsichtbaren „Ausweis", der 12 Stunden lang gültig ist. Dadurch muss man das Passwort
+        nicht bei jedem Klick erneut eingeben. Die Anmelde- und Live-Seiten für Studierende
+        brauchen dagegen <em>kein</em> Passwort – sie sind nur über den jeweiligen QR-Code/Link
+        einer Sitzung erreichbar, tauchen also nirgends öffentlich auf.
+      </dd>
+    </div>
+  </dl>
+</section>
+
+<section id="erste-schritte">
+  <h2><span class="kicker">Kapitel 3</span>Erste Schritte: Anmelden</h2>
+  <p>
+    Der Dozierenden-Bereich ist mit einem gemeinsamen Passwort geschützt. Beim Aufruf der
+    Startseite landet man automatisch auf der Login-Seite.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz1-00-login.png" alt="Login-Seite mit Passwortfeld und Anmelden-Button">
+    <figcaption>Login-Seite: Dozenten-Passwort eingeben und auf „Anmelden" klicken.</figcaption>
+  </figure>
+  <p>Nach erfolgreichem Login gelangt man auf das Dashboard mit der Übersicht aller Sitzungen.</p>
+  <figure>
+    <img src="anleitung-assets/sz1-01-dashboard.png" alt="Dashboard mit Formular zum Anlegen einer neuen Session">
+    <figcaption>Dashboard: hier werden neue Sitzungen angelegt und bestehende verwaltet.</figcaption>
+  </figure>
+</section>
+
+<section id="sz1">
+  <h2><span class="kicker">Kapitel 4</span>Einzelauslosung (Sz1)</h2>
+  <p>Ziel: aus allen angemeldeten Studierenden fair eine Person auswählen.</p>
+
+  <h3>1. Sitzung anlegen</h3>
+  <ol class="steps">
+    <li>Im Dashboard einen Namen für die Sitzung eingeben (z.&nbsp;B. „Vorlesung 5 – Aufgabe").</li>
+    <li>Als Typ <strong>„Einzelauslosung"</strong> wählen.</li>
+    <li>Status auf <code>active</code> lassen, damit sich Studierende sofort anmelden können.</li>
+    <li>Auf „Hinzufügen" klicken.</li>
+  </ol>
+  <figure>
+    <img src="anleitung-assets/sz1-02-dashboard-session-angelegt.png" alt="Neu angelegte Session im Dashboard">
+    <figcaption>Die neue Sitzung erscheint als Karte im Dashboard.</figcaption>
+  </figure>
+
+  <h3>2. QR-Code zeigen</h3>
+  <p>
+    Über das QR-Icon auf der Session-Karte öffnet sich der QR-Code, den die Studierenden mit dem
+    Smartphone scannen. Alternativ lässt sich der Link auch direkt kopieren und z.&nbsp;B. im
+    Chat teilen.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz1-03-qr-code.png" alt="QR-Code-Fenster mit Link zur Registrierungsseite">
+    <figcaption>QR-Code zum Scannen – führt direkt zur Anmeldeseite dieser Sitzung.</figcaption>
+  </figure>
+
+  <h3>3. Live-Bühne öffnen</h3>
+  <p>Über den „Live"-Button auf der Session-Karte gelangt man auf die Beamer-taugliche Live-Ansicht.</p>
+  <figure>
+    <img src="anleitung-assets/sz1-04-live-leer.png" alt="Live-Ansicht ohne Teilnehmende, wartet auf Anmeldungen">
+    <figcaption>Live-Ansicht direkt nach dem Öffnen: noch niemand hat sich gemeldet.</figcaption>
+  </figure>
+
+  <h3>4. So melden sich Studierende an</h3>
+  <p>Nach dem Scannen landen Studierende auf einer schlichten Seite, auf der nur der Name eingetragen wird.</p>
+  <figure>
+    <img src="anleitung-assets/sz1-05-registrierung-formular.png" alt="Registrierungsformular mit Eingabefeld für den Namen">
+    <figcaption>Registrierungsseite aus Sicht der Studierenden.</figcaption>
+  </figure>
+  <figure>
+    <img src="anleitung-assets/sz1-06-registrierung-erfolgreich.png" alt="Bestätigung nach erfolgreicher Registrierung">
+    <figcaption>Bestätigung nach dem Absenden – die Person erscheint jetzt live beim Beamer.</figcaption>
+  </figure>
+  <figure>
+    <img src="anleitung-assets/sz1-07-live-teilnehmer.png" alt="Live-Ansicht mit mehreren angemeldeten Teilnehmenden">
+    <figcaption>Alle Anmeldungen erscheinen in Echtzeit auf der Live-Bühne.</figcaption>
+  </figure>
+
+  <h3>5. Auslosen</h3>
+  <p>
+    Ein Klick auf <strong>„Auslosen"</strong> startet die Ziehungs-Animation. Die Auswahl ist
+    dabei bewusst <strong>nicht rein zufällig</strong>: Wer sich in einer früheren Runde gemeldet
+    hat, aber nicht drangekommen ist, sammelt „Guthaben" und hat beim nächsten Mal höhere Chancen
+    – das lässt sich unter „Schwierigkeit dieser Runde" (Leicht/Mittel/Schwer) sowie über die
+    kleinen +/– Regler pro Person nachvollziehen und feinjustieren.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz1-08-gewinner.png" alt="Gewinner-Anzeige nach der Ziehung mit Krone-Symbol">
+    <figcaption>Die gezogene Person wird groß mit Krone angezeigt; „Nochmal auslosen" wiederholt die Ziehung.</figcaption>
+  </figure>
+  <p>
+    Über den Button „… als vorgetragen werten" wird die Runde abgeschlossen: Die Person gilt als
+    „fertig" und fließt ins Fairness-Gedächtnis ein, die übrigen sammeln Guthaben für die nächste
+    Runde.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz1-09-gewertet.png" alt="Gewertete Runde, eine Person ist als fertig markiert">
+    <figcaption>Nach dem Werten: Ben ist „fertig", Anna und Cara haben nun mehr Gewicht für die nächste Ziehung.</figcaption>
+  </figure>
+
+  <h3>6. Ergebnisse sichern (Excel-Export)</h3>
+  <p>
+    Da Namen nicht dauerhaft gespeichert werden, liegt die Sicherung der Ergebnisse bewusst in
+    der Hand der Dozierenden: „Excel export" lädt eine <code>.xlsx</code>-Datei mit allen Namen
+    und ihrem Fairness-Stand herunter und setzt danach die lokale Sitzung zurück. Über „Excel
+    laden" lässt sich derselbe Stand später wieder einspielen, um über mehrere Vorlesungstermine
+    hinweg fair zu bleiben.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz1-10-excel-export.png" alt="Excel export und Excel laden Buttons">
+    <figcaption>Excel-Export/-Import zur Persistenz über das Semester hinweg.</figcaption>
+  </figure>
+</section>
+
+<section id="sz2">
+  <h2><span class="kicker">Kapitel 5</span>Team-Auslosung (Sz2)</h2>
+  <p>Ziel: Studierende in Teams (und optional zusätzlich Themen) einteilen.</p>
+
+  <h3>1. Sitzung anlegen</h3>
+  <p>
+    Wie bei Sz1, nur dass als Typ <strong>„Team-Auslosung"</strong> gewählt wird. Dabei lässt
+    sich zusätzlich die gewünschte <strong>Teamgröße</strong> festlegen.
+  </p>
+
+  <h3>2. Anmeldungen sammeln</h3>
+  <p>QR-Code teilen wie bei Sz1; alle Anmeldungen laufen live in der Seitenleiste auf.</p>
+  <figure>
+    <img src="anleitung-assets/sz2-01-live-teilnehmer.png" alt="Live-Ansicht der Team-Auslosung mit sechs angemeldeten Personen">
+    <figcaption>Sechs Personen haben sich für die Team-Auslosung angemeldet.</figcaption>
+  </figure>
+
+  <h3>3. Optional: Themen anlegen</h3>
+  <p>
+    Über den aufklappbaren Bereich „Themen" lassen sich vor oder nach der Ziehung Themen
+    hinzufügen, die anschließend per Drag &amp; Drop einem Team zugeordnet werden können.
+  </p>
+  <figure>
+    <img src="anleitung-assets/sz2-02-thema-hinzugefuegt.png" alt="Aufgeklappter Themen-Bereich mit einem hinzugefügten Thema">
+    <figcaption>Themen lassen sich einzeln hinzufügen oder per „Offene Themen zufällig verteilen" auslosen.</figcaption>
+  </figure>
+
+  <h3>4. Teams auslosen</h3>
+  <p>Ein Klick auf <strong>„Teams auslosen"</strong> verteilt alle Angemeldeten zufällig auf die Teams.</p>
+  <figure>
+    <img src="anleitung-assets/sz2-03-teams-ausgelost.png" alt="Drei ausgeloste Teams mit je zwei Mitgliedern">
+    <figcaption>Ergebnis der ersten Ziehung: drei Teams à zwei Personen.</figcaption>
+  </figure>
+
+  <h3>5. Anpassen: Ziehen, Fixieren, Sperren</h3>
+  <p>Bevor das Ergebnis endgültig ist, lässt es sich frei anpassen:</p>
+  <ul>
+    <li><strong>Per Drag &amp; Drop</strong> Personen zwischen Teams verschieben.</li>
+    <li>
+      <strong>Mitglied fixieren</strong> (Pin-Symbol): Diese Person bleibt bei einer erneuten
+      Ziehung garantiert in ihrem Team.
+    </li>
+    <li>
+      <strong>Team sperren</strong> (Schloss-Symbol): Das ganze Team soll bei einer erneuten
+      Ziehung unverändert bleiben.
+    </li>
+  </ul>
+  <figure>
+    <img src="anleitung-assets/sz2-04-mitglied-fixiert.png" alt="Ein Team-Mitglied wurde per Pin fixiert">
+    <figcaption>Ein Mitglied wurde fixiert (goldenes Pin-Symbol) – es bleibt beim nächsten Auslosen im Team.</figcaption>
+  </figure>
+  <figure>
+    <img src="anleitung-assets/sz2-05-team-gesperrt.png" alt="Team 1 wurde komplett gesperrt (goldenes Schloss-Symbol)">
+    <figcaption>Team 1 wurde zusätzlich komplett gesperrt (goldenes Schloss-Symbol).</figcaption>
+  </figure>
+  <p>
+    Über <strong>„Freien Rest neu auslosen"</strong> werden anschließend nur die noch freien,
+    nicht fixierten bzw. nicht gesperrten Personen neu gemischt – siehe dazu aber unbedingt den
+    Hinweis im nächsten Kapitel, da dieses Zusammenspiel aktuell nicht immer zuverlässig
+    funktioniert.
+  </p>
+
+  <h3>6. Vollbild für den Beamer</h3>
+  <p>Über das Vollbild-Symbol lässt sich die Teamansicht formatfüllend auf dem Beamer anzeigen.</p>
+  <figure>
+    <img src="anleitung-assets/sz2-07-vollbild.png" alt="Team-Übersicht im Vollbildmodus">
+    <figcaption>Vollbildmodus – ideal zum Präsentieren vor der Gruppe.</figcaption>
+  </figure>
+</section>
+
+<section id="einschraenkungen">
+  <h2><span class="kicker">Kapitel 6</span>Bekannte Einschränkungen</h2>
+  <div class="callout warn">
+    <p>
+      <strong>„Freien Rest neu auslosen" kann aktuell auch gesperrte Teams und fixierte
+      Mitglieder verändern.</strong> Beim Erstellen dieser Anleitung wurde folgender Ablauf
+      getestet: Ein Mitglied wurde fixiert, danach das ganze Team zusätzlich gesperrt, und
+      anschließend „Freien Rest neu auslosen" geklickt. Erwartet wäre, dass dieses Team
+      unverändert bleibt – tatsächlich wurden aber auch seine Mitglieder neu gemischt (siehe
+      Screenshot unten: aus „Echo + Charlie" wurde „Foxtrot + Bravo").
+    </p>
+    <p>
+      Dieses Verhalten ist im internen Backlog des Projekts bereits als Aufgabe erfasst
+      („Reset-Bug" bei gesperrten Teams). Bis zur Behebung empfiehlt es sich, das Ergebnis nach
+      „Freien Rest neu auslosen" kurz zu kontrollieren, statt sich allein auf Sperrung/Fixierung
+      zu verlassen.
+    </p>
+  </div>
+  <figure>
+    <img src="anleitung-assets/sz2-06-neu-ausgelost.png" alt="Nach Freien Rest neu auslosen wurde auch das gesperrte Team 1 verändert">
+    <figcaption>
+      Team 1 war fixiert <em>und</em> gesperrt, wurde nach „Freien Rest neu auslosen" trotzdem
+      ausgetauscht – erkennbar am Vergleich mit dem vorherigen Screenshot.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="betrieb">
+  <h2><span class="kicker">Kapitel 7</span>Betrieb &amp; Hosting (Kurzfassung)</h2>
+  <p>
+    Für Dozierende ist dieses Kapitel meist nicht relevant – es richtet sich an alle, die die
+    Anwendung technisch betreuen.
+  </p>
+  <ul>
+    <li>Die App läuft als ein einzelner Docker-Container hinter einem Plesk-Reverse-Proxy.</li>
+    <li>
+      Für die Live-Übertragung (Live-Ticker/SSE) müssen am Reverse-Proxy zwei Einstellungen
+      gesetzt sein: gepuffertes Weiterleiten aus und ein langes Lese-Timeout, sonst bricht die
+      Verbindung nach kurzer Zeit ab.
+    </li>
+    <li>Ein Update/Redeploy besteht aus einem einzigen Docker-Befehl, der das Image neu baut und den Container ersetzt.</li>
+  </ul>
+  <p>Details (Datenbank-Schema, genaue Konfiguration) stehen in <code>docs/DEPLOYMENT.md</code> im Projekt-Repository.</p>
+</section>
+
+<section id="faq">
+  <h2><span class="kicker">Kapitel 8</span>Häufige Fragen</h2>
+
+  <h3>Was bedeutet „Verbindung wird wiederhergestellt…" auf der Live-Seite?</h3>
+  <p>
+    Die dauerhaft offene Leitung zum Server (siehe Kapitel 2) ist kurz unterbrochen, z.&nbsp;B.
+    durch einen kurzen Netzwerkaussetzer. Die Seite versucht automatisch, sich neu zu verbinden;
+    ein Neuladen ist normalerweise nicht nötig.
+  </p>
+
+  <h3>Der QR-Code lässt sich nicht scannen – was tun?</h3>
+  <p>
+    Am zuverlässigsten funktioniert der direkte Link („Link kopieren"), z.&nbsp;B. per Chat oder
+    Lernplattform geteilt, falls die Beamer-Auflösung oder Entfernung das Scannen erschwert.
+  </p>
+
+  <h3>Können sich Studierende mehrfach anmelden?</h3>
+  <p>
+    Ja, aktuell gibt es keine technische Sperre gegen Mehrfachanmeldungen mit unterschiedlichen
+    oder gleichen Namen – das liegt in der Verantwortung der Gruppe vor Ort.
+  </p>
+
+  <h3>Gehen die Daten verloren, wenn ich die Seite neu lade?</h3>
+  <p>
+    Nein, die Ergebnisse einer laufenden Sitzung bleiben im Browser der Dozierenden erhalten
+    (auch nach einem Neuladen). Dauerhaft weg sind sie erst nach einem bewussten Zurücksetzen
+    (z.&nbsp;B. durch den Excel-Export bei Sz1) oder wenn die Sitzung gelöscht wird.
+  </p>
+
+  <h3>Welche Browser werden unterstützt?</h3>
+  <p>Alle aktuellen Versionen von Chrome, Firefox, Edge und Safari – sowohl am Rechner als auch am Smartphone.</p>
+</section>
+
+</main>
+
+<footer>
+  Smart Student Picker – interne Bedienungsanleitung. Technische Details siehe <code>README.md</code>,
+  <code>docs/DEPLOYMENT.md</code> und <code>docs/BACKLOG.md</code> im Projekt-Repository.
+</footer>
+
+</body>
+</html>
