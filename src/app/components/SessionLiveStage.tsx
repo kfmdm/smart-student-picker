@@ -674,7 +674,7 @@ function SingleDrawMode({
   const [winner, setWinner] = useState<Participant | null>(null);
   const [pendingWinner, setPendingWinner] = useState<Participant | null>(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [roundDifficulty, setRoundDifficulty] = useState<number>(2);
+  const [roundDifficulty, setRoundDifficulty] = useState<number>(1);
   const [roundCommitted, setRoundCommitted] = useState(false);
   // Fairness-Gedächtnis überlebt einen Refresh (localStorage).
   const [fairnessMemory, setFairnessMemory] = useState<FairnessMemory>(() =>
