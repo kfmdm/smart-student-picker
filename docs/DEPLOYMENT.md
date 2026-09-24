@@ -49,3 +49,18 @@ docker compose up -d --build
 ```bash
 docker compose up -d --build
 ```
+
+## Admin-Passwort auf dem HSRM-Server ändern
+
+Das Deployment liegt auf `eorl.local.cs.hs-rm.de` unter
+`/opt/smart-student-picker`. Dieser einzelne Befehl fragt das neue Passwort
+verdeckt ab, speichert es in `/opt/smart-student-picker/.env.production` und
+startet die Anwendung neu:
+
+```bash
+ssh -t admin@eorl.local.cs.hs-rm.de /opt/smart-student-picker/deploy/change-admin-password.py
+```
+
+Nach der Änderung sind bestehende Admin-Anmeldungen ungültig. Weil die
+Teilnehmerliste nur im Arbeitsspeicher liegt, sollte das Passwort nicht während
+einer laufenden Auslosung geändert werden.
