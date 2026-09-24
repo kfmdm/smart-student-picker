@@ -340,32 +340,63 @@
   <h3>5. Auslosen</h3>
   <p>
     Ein Klick auf <strong>„Auslosen"</strong> startet die Ziehungs-Animation. Die Auswahl ist
-    dabei bewusst <strong>nicht rein zufällig</strong>: Wer sich in einer früheren Runde gemeldet
-    hat, aber nicht drangekommen ist, sammelt „Guthaben" und hat beim nächsten Mal höhere Chancen
-    – das lässt sich unter „Schwierigkeit dieser Runde" (Leicht/Mittel/Schwer) sowie über die
-    kleinen +/– Regler pro Person nachvollziehen und feinjustieren.
+    dabei bewusst <strong>nicht rein zufällig</strong>, sondern gewichtet nach einem einfachen
+    Punktesystem ("Guthaben"), das unter jedem Namen als <code>×N</code> angezeigt wird.
   </p>
+
+  <dl>
+    <div class="term">
+    <dt>So funktioniert die Gewichtung genau</dt>
+    <dd>
+      <ul>
+        <li>
+          Jede Person startet mit Gewicht <strong>1</strong> (Guthaben 0). Je höher das Guthaben,
+          desto höher die Chance gezogen zu werden — Gewicht = <code>1 + Guthaben</code>.
+        </li>
+        <li>
+          Wer sich meldet, aber bei der Ziehung <strong>nicht gewinnt</strong>, bekommt Guthaben
+          gutgeschrieben: <code>+1</code> bei „Leicht", <code>+2</code> bei „Mittel", <code>+3</code>
+          bei „Schwer" (einstellbar über „Schwierigkeit dieser Runde"). So steigen die Chancen für
+          Übergangene von Runde zu Runde.
+        </li>
+        <li>
+          Wer <strong>gewinnt</strong>, wird beim Werten der Runde <strong>nicht aus dem Pool
+          entfernt</strong> — das Guthaben wird lediglich <strong>halbiert</strong>. Damit sinkt die
+          Chance direkt nach einem Gewinn spürbar, ohne dass die Person für den Rest des Semesters
+          komplett ausgeschlossen bleibt. Das verhindert, dass irgendwann alle schon "dran waren"
+          und gar niemand mehr auslosbar ist.
+        </li>
+        <li>
+          Über die kleinen +/– Regler neben jedem Namen lässt sich das Gewicht zusätzlich manuell
+          für die aktuelle Runde anpassen (z.&nbsp;B. um jemanden bewusst zu bevorzugen).
+        </li>
+      </ul>
+    </dd>
+    </div>
+  </dl>
+
   <figure>
     <img src="anleitung-assets/sz1-08-gewinner.png" alt="Gewinner-Anzeige nach der Ziehung mit Krone-Symbol">
     <figcaption>Die gezogene Person wird groß mit Krone angezeigt; „Nochmal auslosen" wiederholt die Ziehung.</figcaption>
   </figure>
   <p>
-    Über den Button „… als vorgetragen werten" wird die Runde abgeschlossen: Die Person gilt als
-    „fertig" und fließt ins Fairness-Gedächtnis ein, die übrigen sammeln Guthaben für die nächste
-    Runde.
+    Über den Button „… als vorgetragen werten" wird die Runde abgeschlossen: Die übrigen Melder
+    bekommen ihr Guthaben gutgeschrieben, die gewonnene Person behält ihr (halbiertes) Guthaben und
+    bleibt für künftige Ziehungen weiterhin im Pool.
   </p>
   <figure>
-    <img src="anleitung-assets/sz1-09-gewertet.png" alt="Gewertete Runde, eine Person ist als fertig markiert">
-    <figcaption>Nach dem Werten: Ben ist „fertig", Anna und Cara haben nun mehr Gewicht für die nächste Ziehung.</figcaption>
+    <img src="anleitung-assets/sz1-09-gewertet.png" alt="Gewertete Runde: die Gewinnerin zeigt ein niedrigeres Guthaben-Gewicht, die übrigen ein höheres">
+    <figcaption>Nach dem Werten: Anna (gewonnen) hat weiterhin Gewicht ×1, Ben und Cara haben durch die Gutschrift jetzt ×3 – alle bleiben für die nächste Ziehung im Pool.</figcaption>
   </figure>
 
   <h3>6. Ergebnisse sichern (Excel-Export)</h3>
   <p>
     Da Namen nicht dauerhaft gespeichert werden, liegt die Sicherung der Ergebnisse bewusst in
-    der Hand der Dozierenden: „Excel export" lädt eine <code>.xlsx</code>-Datei mit allen Namen
-    und ihrem Fairness-Stand herunter und setzt danach die lokale Sitzung zurück. Über „Excel
-    laden" lässt sich derselbe Stand später wieder einspielen, um über mehrere Vorlesungstermine
-    hinweg fair zu bleiben.
+    der Hand der Dozierenden: „Excel export" lädt eine <code>.xlsx</code>-Datei mit den Spalten
+    <code>Name</code>, <code>Guthaben</code> und <code>Meldungen</code> (Anzahl erfolgloser
+    Meldungen) herunter und setzt danach die lokale Sitzung zurück. Über „Excel laden" lässt sich
+    derselbe Stand später wieder einspielen, um über mehrere Vorlesungstermine hinweg fair zu
+    bleiben — sonst fängt die Gewichtung beim nächsten Termin wieder bei null an.
   </p>
   <figure>
     <img src="anleitung-assets/sz1-10-excel-export.png" alt="Excel export und Excel laden Buttons">

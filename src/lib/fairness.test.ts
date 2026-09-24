@@ -5,7 +5,6 @@ import {
   getRecord,
   normalizeName,
   pickWeighted,
-  resetPresented,
   type FairnessMemory,
 } from "@/lib/fairness";
 
@@ -22,28 +21,14 @@ describe("normalizeName", () => {
 });
 
 describe("drawWeight", () => {
-  it("gibt 0 für bereits vorgetragene Personen", () => {
-    expect(
-      drawWeight({ name: "A", presented: true, credit: 10, attempts: 3 }),
-    ).toBe(0);
-  });
-
   it("ist 1 ohne Guthaben und steigt linear mit dem Guthaben (alpha)", () => {
-    expect(
-      drawWeight({ name: "A", presented: false, credit: 0, attempts: 0 }),
-    ).toBe(1);
-    expect(
-      drawWeight({ name: "A", presented: false, credit: 4, attempts: 0 }),
-    ).toBe(5);
-    expect(
-      drawWeight({ name: "A", presented: false, credit: 4, attempts: 0 }, 2),
-    ).toBe(9);
+    expect(drawWeight({ name: "A", credit: 0, attempts: 0 })).toBe(1);
+    expect(drawWeight({ name: "A", credit: 4, attempts: 0 })).toBe(5);
+    expect(drawWeight({ name: "A", credit: 4, attempts: 0 }, 2)).toBe(9);
   });
 
   it("behandelt negatives Guthaben als 0", () => {
-    expect(
-      drawWeight({ name: "A", presented: false, credit: -3, attempts: 0 }),
-    ).toBe(1);
+    expect(drawWeight({ name: "A", credit: -3, attempts: 0 })).toBe(1);
   });
 });
 
@@ -87,7 +72,6 @@ describe("getRecord", () => {
   it("liefert einen leeren Datensatz für unbekannte Namen", () => {
     expect(getRecord({}, "Neu")).toEqual({
       name: "Neu",
-      presented: false,
       credit: 0,
       attempts: 0,
     });
@@ -95,7 +79,7 @@ describe("getRecord", () => {
 });
 
 describe("applyRoundResult", () => {
-  it("markiert den Gewinner als vorgetragen und gibt den übrigen Meldern Guthaben", () => {
+  it("halbiert das Guthaben des Gewinners und gibt den übrigen Meldern Guthaben", () => {
     const next = applyRoundResult(
       {},
       {
@@ -105,9 +89,22 @@ describe("applyRoundResult", () => {
       },
     );
 
-    expect(next["alice"]).toMatchObject({ presented: true, credit: 0 });
-    expect(next["bob"]).toMatchObject({ credit: 2, attempts: 1, presented: false });
+    expect(next["alice"]).toMatchObject({ credit: 0 });
+    expect(next["bob"]).toMatchObject({ credit: 2, attempts: 1 });
     expect(next["cara"]).toMatchObject({ credit: 2, attempts: 1 });
+  });
+
+  it("halbiert vorhandenes Guthaben des Gewinners, statt es zu löschen", () => {
+    const memory: FairnessMemory = {
+      alice: { name: "Alice", credit: 6, attempts: 4 },
+    };
+    const next = applyRoundResult(memory, {
+      winnerName: "Alice",
+      volunteerNames: ["Alice", "Bob"],
+      difficulty: 1,
+    });
+
+    expect(next["alice"]).toMatchObject({ credit: 3, attempts: 4 });
   });
 
   it("skaliert das Guthaben mit der Schwierigkeit und beta", () => {
@@ -126,7 +123,7 @@ describe("applyRoundResult", () => {
 
   it("baut auf vorhandenem Guthaben auf", () => {
     const memory: FairnessMemory = {
-      bob: { name: "Bob", presented: false, credit: 5, attempts: 2 },
+      bob: { name: "Bob", credit: 5, attempts: 2 },
     };
     const next = applyRoundResult(memory, {
       winnerName: "Alice",
@@ -177,23 +174,29 @@ describe("Fachliche Fairness-Eigenschaften", () => {
     expect(hardWeight).toBeGreaterThan(easyWeight);
   });
 
-  it("nimmt vorgetragene Personen dauerhaft aus dem Pool", () => {
+  it("gewinnt jemand mehrfach hintereinander, sinkt die Chance durch die Halbierung", () => {
+    let memory: FairnessMemory = {
+      seriensieger: { name: "Seriensieger", credit: 8, attempts: 4 },
+    };
+    const weightBefore = drawWeight(getRecord(memory, "Seriensieger"));
+
+    memory = applyRoundResult(memory, {
+      winnerName: "Seriensieger",
+      volunteerNames: ["Seriensieger", "X"],
+      difficulty: 1,
+    });
+    const weightAfter = drawWeight(getRecord(memory, "Seriensieger"));
+
+    expect(weightAfter).toBeLessThan(weightBefore);
+    // bleibt aber weiterhin im Pool (nie 0 oder ausgeschlossen)
+    expect(weightAfter).toBeGreaterThan(0);
+  });
+
+  it("nimmt niemanden dauerhaft aus dem Pool – auch Gewinner bleiben ziehbar", () => {
     const memory = applyRoundResult(
       {},
       { winnerName: "Gewinner", volunteerNames: ["Gewinner", "X"], difficulty: 2 },
     );
-    // Gewinner hat zwar evtl. Guthaben gehabt, ist aber jetzt raus.
-    expect(drawWeight(getRecord(memory, "Gewinner"))).toBe(0);
-  });
-});
-
-describe("resetPresented", () => {
-  it("setzt das presented-Flag zurück", () => {
-    const memory: FairnessMemory = {
-      a: { name: "A", presented: true, credit: 0, attempts: 0 },
-    };
-    expect(resetPresented(memory, "A")["a"].presented).toBe(false);
-    // unbekannter Name ändert nichts
-    expect(resetPresented(memory, "X")).toBe(memory);
+    expect(drawWeight(getRecord(memory, "Gewinner"))).toBeGreaterThan(0);
   });
 });

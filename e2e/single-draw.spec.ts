@@ -41,7 +41,8 @@ test("Sz1: Registrieren, Ziehung werten, Refresh-Persistenz, Excel-Export = Rese
   await expect(
     page.getByRole("button", { name: "Runde gewertet" }),
   ).toBeVisible();
-  await expect(page.getByText("fertig").first()).toBeVisible();
+  // Niemand wird dauerhaft ausgeschlossen: alle drei bleiben ziehbar (Gewichtsregler sichtbar).
+  await expect(page.getByTitle("Gewichtung verringern")).toHaveCount(3);
 
   // Refresh -> Bewerber bleiben dank localStorage erhalten
   await page.reload();

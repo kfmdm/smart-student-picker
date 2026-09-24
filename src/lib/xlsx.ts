@@ -11,19 +11,9 @@ type Cell = string | number | boolean | Date | null | undefined;
 
 const HEADERS = {
   name: "Name",
-  presented: "Vorgetragen",
   credit: "Guthaben",
   attempts: "Meldungen",
 } as const;
-
-function parseBool(value: Cell): boolean {
-  if (typeof value === "boolean") {
-    return value;
-  }
-  return ["1", "true", "wahr", "ja", "yes", "x"].includes(
-    String(value ?? "").trim().toLowerCase(),
-  );
-}
 
 function parseNumber(value: Cell): number {
   const numeric = Number(value);
@@ -41,7 +31,6 @@ export function rowsToFairness(rows: Cell[][]): FairnessMemory {
     header.findIndex((entry) => names.includes(entry));
 
   const nameIndex = findIndex(["name"]);
-  const presentedIndex = findIndex(["vorgetragen", "presented"]);
   const creditIndex = findIndex(["guthaben", "credit"]);
   const attemptsIndex = findIndex(["meldungen", "attempts", "versuche"]);
   const effectiveNameIndex = nameIndex >= 0 ? nameIndex : 0;
@@ -58,7 +47,6 @@ export function rowsToFairness(rows: Cell[][]): FairnessMemory {
 
     memory[normalizeName(name)] = {
       name,
-      presented: presentedIndex >= 0 ? parseBool(row[presentedIndex]) : false,
       credit: creditIndex >= 0 ? parseNumber(row[creditIndex]) : 0,
       attempts: attemptsIndex >= 0 ? parseNumber(row[attemptsIndex]) : 0,
     };
@@ -70,16 +58,15 @@ export function rowsToFairness(rows: Cell[][]): FairnessMemory {
 // Fairness-Gedächtnis -> Tabellenzeilen (Header + Daten). Rein/testbar.
 export function fairnessToRows(
   memory: FairnessMemory,
-): (string | number | boolean)[][] {
+): (string | number)[][] {
   const records = Object.values(memory).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
 
   return [
-    [HEADERS.name, HEADERS.presented, HEADERS.credit, HEADERS.attempts],
+    [HEADERS.name, HEADERS.credit, HEADERS.attempts],
     ...records.map((record: FairnessRecord) => [
       record.name,
-      record.presented,
       record.credit,
       record.attempts,
     ]),

@@ -5,52 +5,37 @@ import type { FairnessMemory } from "@/lib/fairness";
 describe("Export -> Import Round-Trip", () => {
   it("stellt das Gedächtnis verlustfrei wieder her", () => {
     const memory: FairnessMemory = {
-      alice: { name: "Alice", presented: false, credit: 4, attempts: 2 },
-      bob: { name: "Bob", presented: true, credit: 0, attempts: 5 },
-      cara: { name: "Cara", presented: false, credit: 1, attempts: 1 },
+      alice: { name: "Alice", credit: 4, attempts: 2 },
+      bob: { name: "Bob", credit: 0, attempts: 5 },
+      cara: { name: "Cara", credit: 1, attempts: 1 },
     };
     expect(rowsToFairness(fairnessToRows(memory))).toEqual(memory);
   });
 });
 
 describe("rowsToFairness", () => {
-  it("mappt typisierte Zellen (Boolean/Number) korrekt", () => {
+  it("mappt typisierte Zellen (Number) korrekt", () => {
     const rows = [
-      ["Name", "Vorgetragen", "Guthaben", "Meldungen"],
-      ["Anna", false, 3, 2],
-      ["Ben", true, 0, 1],
+      ["Name", "Guthaben", "Meldungen"],
+      ["Anna", 3, 2],
+      ["Ben", 0, 1],
     ];
     const memory = rowsToFairness(rows);
     expect(memory["anna"]).toEqual({
       name: "Anna",
-      presented: false,
       credit: 3,
       attempts: 2,
     });
-    expect(memory["ben"]).toMatchObject({ presented: true });
-  });
-
-  it("versteht String-Schreibweisen für presented", () => {
-    const rows = [
-      ["Name", "Vorgetragen"],
-      ["A", "ja"],
-      ["B", "1"],
-      ["C", "nein"],
-    ];
-    const memory = rowsToFairness(rows);
-    expect(memory["a"].presented).toBe(true);
-    expect(memory["b"].presented).toBe(true);
-    expect(memory["c"].presented).toBe(false);
+    expect(memory["ben"]).toMatchObject({ credit: 0, attempts: 1 });
   });
 
   it("akzeptiert englische Spaltenüberschriften", () => {
     const rows = [
-      ["name", "presented", "credit", "attempts"],
-      ["Cara", true, 5, 4],
+      ["name", "credit", "attempts"],
+      ["Cara", 5, 4],
     ];
     expect(rowsToFairness(rows)["cara"]).toEqual({
       name: "Cara",
-      presented: true,
       credit: 5,
       attempts: 4,
     });
@@ -62,7 +47,6 @@ describe("rowsToFairness", () => {
     expect(Object.keys(memory).sort()).toEqual(["anna", "ben"]);
     expect(memory["anna"]).toEqual({
       name: "Anna",
-      presented: false,
       credit: 0,
       attempts: 0,
     });

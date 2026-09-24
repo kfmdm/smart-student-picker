@@ -692,14 +692,8 @@ function SingleDrawMode({
   }
 
   // Effektives Auslosungsgewicht: Fairness-Guthaben + manueller Override.
-  // Bereits vorgetragene Personen fallen aus dem Pool (Gewicht 0).
   function weightOf(participant: Participant): number {
     const record = getRecord(fairnessMemory, participant.name);
-
-    if (record.presented) {
-      return 0;
-    }
-
     const base = drawWeight(record, DEFAULT_ALPHA);
     const bonus = manualBonus[participant.uuid] ?? 0;
 
@@ -741,21 +735,11 @@ function SingleDrawMode({
     return [...visibleParticipants, pendingWinner];
   }, [pendingWinner, visibleParticipants]);
 
-  const eligibleParticipants = useMemo(
-    () =>
-      participants.filter(
-        (participant) => !getRecord(fairnessMemory, participant.name).presented,
-      ),
-    [participants, fairnessMemory],
-  );
   const totalWeight = useMemo(
     () =>
-      eligibleParticipants.reduce(
-        (sum, participant) => sum + weightOf(participant),
-        0,
-      ),
+      participants.reduce((sum, participant) => sum + weightOf(participant), 0),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [eligibleParticipants, fairnessMemory, manualBonus],
+    [participants, fairnessMemory, manualBonus],
   );
   const knownCount = Object.keys(fairnessMemory).length;
   const canDraw = totalWeight > 0 && !isDrawing;
@@ -790,7 +774,7 @@ function SingleDrawMode({
       return;
     }
 
-    const entries = eligibleParticipants.map((participant) => ({
+    const entries = participants.map((participant) => ({
       item: participant,
       weight: weightOf(participant),
     }));
@@ -812,16 +796,14 @@ function SingleDrawMode({
     }, 2300);
   }
 
-  // Runde ins Fairness-Gedächtnis übernehmen (Gewinner => vorgetragen,
+  // Runde ins Fairness-Gedächtnis übernehmen (Gewinner => Guthaben halbiert,
   // übrige Melder sammeln Guthaben je nach Schwierigkeit).
   function scoreRound() {
     if (!winner || roundCommitted) {
       return;
     }
 
-    const volunteerNames = eligibleParticipants.map(
-      (participant) => participant.name,
-    );
+    const volunteerNames = participants.map((participant) => participant.name);
 
     setFairnessMemory((currentMemory) =>
       applyRoundResult(currentMemory, {
@@ -997,18 +979,6 @@ function SingleDrawMode({
           onDeleteParticipant={handleDeleteParticipant}
           renderControls={(participant) => {
             const record = getRecord(fairnessMemory, participant.name);
-
-            if (record.presented) {
-              return (
-                <span
-                  className="flex shrink-0 items-center gap-1 rounded bg-emerald-300/15 px-2 py-1 text-xs font-bold text-emerald-100"
-                  title="Hat bereits vorgetragen"
-                >
-                  <Check size={13} /> fertig
-                </span>
-              );
-            }
-
             const weight = weightOf(participant);
 
             return (
