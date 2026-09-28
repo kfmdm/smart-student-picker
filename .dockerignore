@@ -9,6 +9,7 @@ node_modules
 src/generated
 # große Präsentations-Binärdateien, im Image unnötig
 outputs
+__pycache__
 npm-debug.log*
 Dockerfile
 .dockerignore

@@ -47,3 +47,6 @@ next-env.d.ts
 /test-results
 /playwright-report
 /playwright/.cache
+
+# Python deployment helpers
+__pycache__/

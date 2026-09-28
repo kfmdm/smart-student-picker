@@ -35,5 +35,23 @@ npm run dev               # http://localhost:3000
 
 ## Deployment / Betrieb
 
-Siehe [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (Docker + Plesk-Reverse-Proxy) und den
+Auf dem vorbereiteten HSRM-Server: Repository klonen, Skript starten und beim ersten
+Start das gewünschte Admin-Passwort zweimal verdeckt eingeben:
+
+```bash
+git clone --branch develop https://github.com/kfmdm/smart-student-picker.git
+cd smart-student-picker
+./deploy/update.sh
+```
+
+Das Skript erzeugt die Datenbank-Zugangsdaten, initialisiert eine neue Datenbank und
+startet die Anwendung. Spätere Updates verwenden denselben Befehl und behalten die
+vorhandenen Passwörter. Docker/Compose sowie Nginx/TLS sind auf HSRM bereits eingerichtet.
+
+Bestehende Installation in `/opt/smart-student-picker` aus der Ferne aktualisieren:
+`ssh -t admin@eorl.local.cs.hs-rm.de /opt/smart-student-picker/deploy/update.sh`.
+
+Die Admin-Anleitung für Updates und Passwortwechsel steht in
+[`public/anleitung.html`](public/anleitung.html#hsrm-deployment).
+Siehe außerdem [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) (HSRM sowie Docker + Plesk-Reverse-Proxy) und den
 Fortschritt/Backlog in [`docs/BACKLOG.md`](docs/BACKLOG.md).

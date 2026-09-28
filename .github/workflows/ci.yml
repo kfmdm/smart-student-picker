@@ -31,6 +31,11 @@ jobs:
       - name: Tests
         run: npm test
 
+      - name: Deployment-Konfiguration testen
+        run: |
+          bash -n deploy/update.sh
+          python3 -m unittest discover -s deploy -p 'test_*.py'
+
       - name: Build
         run: npm run build
 

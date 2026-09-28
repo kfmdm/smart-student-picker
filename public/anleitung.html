@@ -53,6 +53,8 @@
   h3 { font-size: 1.15rem; margin-top: 2em; }
   p { color: #2a2d3a; }
   code { background: var(--code-bg); padding: .15em .4em; border-radius: 4px; font-size: .92em; }
+  pre { background: var(--code-bg); padding: 16px; border-radius: 8px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
   figure { margin: 20px 0 28px; }
   figure img {
     max-width: 100%;
@@ -105,6 +107,8 @@
     <li><a href="#sz1">Einzelauslosung (Sz1)</a></li>
     <li><a href="#sz2">Team-Auslosung (Sz2)</a></li>
     <li><a href="#betrieb">Betrieb &amp; Hosting (Kurzfassung)</a></li>
+    <li><a href="#hsrm-deployment">HSRM: Installation &amp; Updates</a></li>
+    <li><a href="#admin-passwort">Admin-Passwort ändern</a></li>
     <li><a href="#faq">Häufige Fragen</a></li>
   </ol>
 </nav>
@@ -502,20 +506,144 @@
     Anwendung technisch betreuen.
   </p>
   <ul>
-    <li>Die App läuft als ein einzelner Docker-Container hinter einem Plesk-Reverse-Proxy.</li>
+    <li>Auf dem HSRM-Server läuft die App als einzelner App-Container mit einem MariaDB-Container hinter einem Nginx-Reverse-Proxy. Die separate Review-Umgebung nutzt Plesk.</li>
     <li>
       Für die Live-Übertragung (Live-Ticker/SSE) müssen am Reverse-Proxy zwei Einstellungen
       gesetzt sein: gepuffertes Weiterleiten aus und ein langes Lese-Timeout, sonst bricht die
       Verbindung nach kurzer Zeit ab.
     </li>
-    <li>Ein Update/Redeploy besteht aus einem einzigen Docker-Befehl, der das Image neu baut und den Container ersetzt.</li>
+    <li>Für HSRM übernimmt <code>deploy/update.sh</code> das Laden des neuesten Codes, den Build und das Aktualisieren der Container (siehe Kapitel 7).</li>
   </ul>
   <p>Details (Datenbank-Schema, genaue Konfiguration) stehen in <code>docs/DEPLOYMENT.md</code> im
     <a href="https://github.com/kfmdm/smart-student-picker" target="_blank" rel="noopener">Projekt-Repository</a>.</p>
 </section>
 
+<section id="hsrm-deployment">
+  <h2><span class="kicker">Kapitel 7</span>HSRM: Installation &amp; Updates</h2>
+  <p>
+    Die Anwendung ist unter <a href="https://eorl.local.cs.hs-rm.de">https://eorl.local.cs.hs-rm.de</a>
+    erreichbar. Die bestehende Installation liegt auf dem Server in
+    <code>/opt/smart-student-picker</code>. Dieses Kapitel richtet sich an den Admin.
+  </p>
+  <div class="callout warn">
+    <strong>Außerhalb laufender Auslosungen aktualisieren.</strong>
+    <p>Beim Neustart gehen die Teilnehmerlisten im Arbeitsspeicher verloren. Ergebnisse
+      vorher exportieren. Während des Containerwechsels ist die App kurz nicht erreichbar.</p>
+  </div>
+
+  <h3>Erster Start: klonen und einen Befehl ausführen</h3>
+  <p>Auf dem vorbereiteten HSRM-Server als normaler Benutzer anmelden und das öffentliche
+    Repository klonen. Danach genügt <code>./deploy/update.sh</code>:</p>
+  <pre><code>git clone --branch develop https://github.com/kfmdm/smart-student-picker.git
+cd smart-student-picker
+./deploy/update.sh</code></pre>
+  <p>Beim ersten Start das gewünschte Admin-Passwort zweimal verdeckt eingeben. Das Skript
+    erzeugt die Datenbank-Passwörter automatisch, legt die Konfigurationsdateien mit
+    Dateirechten <code>600</code> an, initialisiert eine neue Datenbank und startet die App.
+    Es müssen keine Zugangsdaten von Hand in Dateien eingetragen werden.</p>
+  <p>Docker/Compose und Nginx/TLS sind auf HSRM bereits eingerichtet. Auf einem anderen
+    Server muss ein Administrator diese Systemdienste einmalig vorbereiten. Das Skript
+    betreibt eine Installation pro Server. Bei einer bestehenden Installation den
+    vorhandenen Checkout weiterverwenden; bei einem Umzug die bisherigen
+    <code>.env.production</code> und <code>.env.database</code> übernehmen.</p>
+
+  <h3>Spätere Updates mit demselben Befehl</h3>
+  <p>Im Terminal des eigenen Rechners ausführen; <code>admin</code> gegebenenfalls durch
+    den eigenen SSH-Benutzernamen ersetzen:</p>
+  <pre><code>ssh -t admin@eorl.local.cs.hs-rm.de /opt/smart-student-picker/deploy/update.sh</code></pre>
+  <p>Wer bereits auf dem Server angemeldet ist, verwendet stattdessen:</p>
+  <pre><code>cd /opt/smart-student-picker
+./deploy/update.sh</code></pre>
+  <p>
+    Das Skript als Besitzer des Git-Checkouts ausführen. Es fragt bei Bedarf nach dem
+    sudo-Passwort für Docker. Der Build kann einige Minuten dauern. Nach erfolgreichem
+    Abschluss werden Containerstatus, Branch und Commit ausgegeben. Anschließend die
+    Website öffnen und den Login prüfen.
+  </p>
+
+  <h3>Voraussetzungen und Ablauf</h3>
+  <ul>
+    <li>Auf dem Server sind Bash, Git, Python 3, <code>flock</code> (Linux-Paket <code>util-linux</code>),
+      Docker und Compose v2 mit <code>--wait</code> und <code>--wait-timeout</code> erforderlich.
+      Der Benutzer braucht Schreibrechte im Checkout und sudo-Rechte für Docker.</li>
+    <li>Fehlende Konfigurationsdateien werden bei der Erstinstallation erstellt.
+      Bestehende Passwörter bleiben erhalten. Nur wenn das Admin-Passwort fehlt oder leer
+      ist, wird es erneut abgefragt.</li>
+    <li>Das Skript lädt den neuesten Stand des <strong>aktuell ausgecheckten Branches</strong>
+      per <code>git pull --ff-only</code>. Es wechselt keinen Branch. Das öffentliche Repository
+      wird über HTTPS abgerufen; ein GitHub-Account oder SSH-Deploy-Key ist nicht nötig.</li>
+    <li>Bei lokalen Änderungen, zusätzlichen lokalen Commits oder einem bereits laufenden
+      Update-Skript bricht es ab. Lokale Änderungen zuerst prüfen und sichern.</li>
+    <li>Es baut die App mit <code>docker-compose.production.yml</code> und aktualisiert
+      die Container erst nach erfolgreichem Build. Anschließend wartet es bis zu 180 Sekunden
+      auf die Container-Healthchecks.</li>
+    <li>Vorhandene Zugangsdaten und das Datenbank-Volume bleiben erhalten. Das Basisschema
+      wird nur für eine neue, leere Datenbank automatisch angelegt. Bei Updates erforderliche
+      SQL-Migrationen separat prüfen.</li>
+    <li>Fehlt nur eine Konfigurationsdatei oder fehlen beide trotz bestehendem Datenbank-Volume,
+      bricht das Skript ab. In diesem Fall die bisherigen Dateien aus der Sicherung wiederherstellen.</li>
+  </ul>
+
+  <h3>Falls das Update-Skript noch fehlt</h3>
+  <p>Einmalig auf dem Server den Checkout aktualisieren. Vor dem Pull den angezeigten Branch
+    prüfen und etwaige lokale Änderungen sichern. Der Branch muss das neue Skript bereits enthalten:</p>
+  <pre><code>ssh admin@eorl.local.cs.hs-rm.de
+cd /opt/smart-student-picker
+git status --short
+git branch --show-current
+git pull --ff-only https://github.com/kfmdm/smart-student-picker.git "$(git branch --show-current)"
+./deploy/update.sh</code></pre>
+  <p>Ist der bisherige Server-Ordner eine Dateikopie ohne Git-Checkout, zuerst diesen
+    Ordner sichern, das Repository klonen und die bisherigen <code>.env.production</code>
+    und <code>.env.database</code> mit ihren Dateirechten übernehmen. Das bestehende
+    Datenbank-Volume dabei erhalten.</p>
+
+  <h3>Wenn das Deployment fehlschlägt</h3>
+  <p>Bei einem Buildfehler laufen die bisherigen Container weiter; der Git-Checkout ist dann
+    bereits aktualisiert. Es gibt keinen automatischen Rollback. Bei einem Start- oder
+    Healthcheck-Fehler auf dem Server den Status und die letzten Logmeldungen prüfen:</p>
+  <pre><code>cd /opt/smart-student-picker
+sudo docker compose -f docker-compose.production.yml ps
+sudo docker compose -f docker-compose.production.yml logs --tail=100 app db</code></pre>
+  <p>Nach Beheben der Ursache <code>./deploy/update.sh</code> erneut ausführen.
+    Die Container-Healthchecks prüfen nicht den externen HTTPS-Zugang; deshalb auch die
+    Website im Browser kontrollieren. Weitere Details stehen in
+    <a href="https://github.com/kfmdm/smart-student-picker/blob/develop/docs/DEPLOYMENT.md" target="_blank" rel="noopener">docs/DEPLOYMENT.md</a>.</p>
+</section>
+
+<section id="admin-passwort">
+  <h2><span class="kicker">Kapitel 8</span>Admin-Passwort auf dem Server ändern</h2>
+  <p>Das gemeinsame Passwort für den Dozierenden-Bereich lässt sich vom eigenen Rechner
+    mit dem vorhandenen Skript ändern:</p>
+  <pre><code>ssh -t admin@eorl.local.cs.hs-rm.de /opt/smart-student-picker/deploy/change-admin-password.py</code></pre>
+  <p>Alternativ direkt auf dem Server:</p>
+  <pre><code>cd /opt/smart-student-picker
+./deploy/change-admin-password.py</code></pre>
+  <ol class="steps">
+    <li>Das neue Passwort eingeben und ein zweites Mal bestätigen. Die Eingaben werden
+      nicht angezeigt. Leere oder unterschiedliche Eingaben werden abgelehnt.</li>
+    <li>Falls abgefragt, das sudo-Passwort eingeben. Das Skript speichert das neue
+      Admin-Passwort in <code>/opt/smart-student-picker/.env.production</code> und erstellt
+      nur den App-Container neu. Die Datenbank wird dabei nicht neu gestartet.</li>
+    <li>Die Erfolgsmeldung abwarten und anschließend auf der Website mit dem neuen Passwort anmelden.</li>
+  </ol>
+  <p>Voraussetzungen: Python 3, Schreibrechte auf <code>.env.production</code> und sudo-Rechte
+    für Docker. <code>admin</code> gegebenenfalls durch den eigenen SSH-Benutzernamen ersetzen.
+    Die Konfigurationsdatei erhält Dateirechte <code>600</code>, sodass nur ihr Besitzer
+    lesen und schreiben darf. Das Passwort wird nicht als Kommandozeilenargument angegeben.</p>
+  <div class="callout warn">
+    <strong>Passwortwechsel ebenfalls außerhalb laufender Auslosungen durchführen.</strong>
+    <p>Bestehende Admin-Anmeldungen werden ungültig. Der Neustart leert die Teilnehmerlisten
+      im Arbeitsspeicher. Ergebnisse vorher exportieren und Passwortwechsel und Deployment
+      nacheinander ausführen.</p>
+  </div>
+  <p>Falls der Compose-Aufruf fehlschlägt, stellt das Skript die bisherige
+    Konfigurationsdatei wieder her. In diesem Fall den Containerstatus und die Logs mit
+    den Befehlen aus Kapitel 7 prüfen.</p>
+</section>
+
 <section id="faq">
-  <h2><span class="kicker">Kapitel 7</span>Häufige Fragen</h2>
+  <h2><span class="kicker">Kapitel 9</span>Häufige Fragen</h2>
 
   <h3>Was bedeutet „Verbindung wird wiederhergestellt…" auf der Live-Seite?</h3>
   <p>
