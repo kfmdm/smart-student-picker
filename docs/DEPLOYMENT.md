@@ -96,6 +96,11 @@ fragt bei Bedarf das sudo-Passwort ab. Voraussetzungen sind Bash, Git, Python 3,
 (unter Linux im Paket `util-linux`), Docker mit laufendem Daemon und einem
 Compose-v2-Plugin mit Unterstützung für `--wait` und `--wait-timeout`.
 Der Benutzer benötigt Schreibrechte im Checkout und sudo-Rechte für Docker.
+Auf HSRM wird der Internetzugang über den Hochschul-Proxy bereitgestellt. Das
+Skript übernimmt gesetzte `http_proxy`/`https_proxy`/`no_proxy`-Variablen (auch in
+Großschreibung) für den Docker-Client und die Build-Schritte. Der Docker-Daemon
+benötigt ebenfalls eine Proxy-Konfiguration; diese ist auf HSRM bereits als
+systemd-Konfiguration vorhanden.
 
 ### Was das Update macht
 

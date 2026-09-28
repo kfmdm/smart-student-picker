@@ -10,8 +10,9 @@ fail() {
 # Keep the update in a function so pulling a new script cannot change commands
 # halfway through this invocation.
 main() {
-    local project_dir branch deployed_commit command
+    local project_dir branch deployed_commit command proxy_var
     local -a docker_command=(docker)
+    local -a build_args=()
     project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
     cd -- "$project_dir"
 
@@ -31,7 +32,9 @@ main() {
     if (( EUID != 0 )); then
         command -v sudo >/dev/null || fail "sudo fehlt."
         sudo -v
-        docker_command=(sudo docker)
+        # BuildKit authenticates to registries in the client process, which also
+        # needs HSRM's proxy variables (the daemon has its own proxy settings).
+        docker_command=(sudo --preserve-env=HTTP_PROXY,HTTPS_PROXY,NO_PROXY,ALL_PROXY,http_proxy,https_proxy,no_proxy,all_proxy docker)
     fi
     "${docker_command[@]}" info >/dev/null
     # Never invent replacement credentials for an existing database volume.
@@ -55,7 +58,12 @@ main() {
     # Validate without printing the resolved configuration (it contains secrets).
     "${docker_command[@]}" config --quiet
     printf 'Baue die Anwendung (Commit %s) …\n' "$deployed_commit"
-    "${docker_command[@]}" build app
+    for proxy_var in HTTP_PROXY HTTPS_PROXY NO_PROXY ALL_PROXY http_proxy https_proxy no_proxy all_proxy; do
+        if [[ -n "${!proxy_var:-}" ]]; then
+            build_args+=(--build-arg "$proxy_var=${!proxy_var}")
+        fi
+    done
+    "${docker_command[@]}" build "${build_args[@]}" app
     printf 'Starte die Container und warte auf die Healthchecks …\n'
     "${docker_command[@]}" up -d --no-build --wait --wait-timeout 180
     "${docker_command[@]}" ps
