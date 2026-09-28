@@ -143,14 +143,14 @@
 <section id="architektur">
   <h2><span class="kicker">Kapitel 2</span>Wie die App im Hintergrund funktioniert</h2>
   <p>
-    Dieses Kapitel richtet sich an alle, die verstehen möchten, was technisch passiert, wenn ein
-    Name auf dem Beamer erscheint – ganz ohne Vorwissen. Die Fachbegriffe aus dem Code werden
-    hier bewusst in Alltagssprache übersetzt.
+    Dieses Kapitel beschreibt die technische Architektur: welche Komponenten es gibt, wie
+    sie miteinander kommunizieren, und wo Teilnehmendendaten tatsächlich landen – bzw.
+    bewusst nicht landen.
   </p>
 
   <figure>
     <svg class="diagram" viewBox="0 0 1080 400" xmlns="http://www.w3.org/2000/svg" role="img"
-         aria-label="Architekturdiagramm: Studierende registrieren sich über die Anmelde-Seite beim Server-Programm, das den Namen kurz auf einem Merkzettel im Arbeitsspeicher notiert und live an den Beamer-Bildschirm überträgt. Das Server-Programm speichert außerdem Sitzungs-Infos, aber keine Namen, in der Datenbank.">
+         aria-label="Architekturdiagramm: Studierende rufen über die Anmelde-Seite eine API-Route des Next.js-Servers auf, die den Namen in ein In-Memory-Relay im Server-Arbeitsspeicher schreibt und per Server-Sent Events live an den Beamer-Bildschirm überträgt. Der Server speichert außerdem Sitzungs-Metadaten, aber keine Teilnehmendennamen, in der MariaDB-Datenbank.">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" fill="#3355dd" />
@@ -169,15 +169,15 @@
         <text x="320" y="108" text-anchor="middle" font-size="12" fill="#5b6072">per QR-Code geöffnet</text>
 
         <rect x="440" y="40" width="190" height="100" rx="12" fill="#fff" stroke="#3355dd" stroke-width="2"/>
-        <text x="535" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Server-Programm</text>
-        <text x="535" y="92" text-anchor="middle" font-size="12" fill="#5b6072">ein einziges Programm,</text>
+        <text x="535" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Next.js-Server</text>
+        <text x="535" y="92" text-anchor="middle" font-size="12" fill="#5b6072">ein Node.js-Prozess,</text>
         <text x="535" y="108" text-anchor="middle" font-size="12" fill="#5b6072">läuft rund um die Uhr</text>
 
         <rect x="660" y="40" width="190" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
-        <text x="755" y="66" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">Kurzzeitiger</text>
-        <text x="755" y="84" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">Merkzettel</text>
-        <text x="755" y="104" text-anchor="middle" font-size="12" fill="#5b6072">nur im Arbeitsspeicher</text>
-        <text x="755" y="120" text-anchor="middle" font-size="12" fill="#5b6072">(verschwindet danach)</text>
+        <text x="755" y="66" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">In-Memory</text>
+        <text x="755" y="84" text-anchor="middle" font-weight="700" font-size="14" fill="#1c1f2b">Relay</text>
+        <text x="755" y="104" text-anchor="middle" font-size="12" fill="#5b6072">Map im Server-RAM</text>
+        <text x="755" y="120" text-anchor="middle" font-size="12" fill="#5b6072">(weg bei Neustart)</text>
 
         <rect x="880" y="40" width="180" height="100" rx="12" fill="#eef1ff" stroke="#3355dd" stroke-width="1.5"/>
         <text x="970" y="72" text-anchor="middle" font-weight="700" font-size="15" fill="#1c1f2b">Beamer-Bildschirm</text>
@@ -208,64 +208,82 @@
         <text x="548" y="205" font-size="11" fill="#5b6072">⑤</text>
 
         <!-- Legende der Nummern -->
-        <text x="20" y="380" font-size="12" fill="#2a2d3a">① scannt QR-Code  ② schickt den Namen  ③ trägt Namen kurz ein  ④ Live-Übertragung wie ein Ticker  ⑤ speichert nur Sitzungs-Metadaten</text>
+        <text x="20" y="380" font-size="12" fill="#2a2d3a">① scannt QR-Code  ② sendet Registrierung  ③ trägt Namen im Relay ein  ④ Push per Server-Sent Events  ⑤ speichert nur Sitzungs-Metadaten</text>
       </g>
     </svg>
     <figcaption>
-      Ablauf, wenn sich jemand anmeldet: vom Smartphone über die Anmelde-Seite und das
-      Server-Programm bis auf den Beamer – Namen selbst landen dabei nie in der Datenbank.
+      Ablauf, wenn sich jemand anmeldet: vom Smartphone über die Anmelde-Seite und die
+      API-Route des Next.js-Servers bis auf den Beamer – Namen selbst landen dabei nie in
+      der Datenbank.
     </figcaption>
   </figure>
 
-  <p>Was die Kästen im Diagramm im Alltag bedeuten:</p>
+  <p>Die Komponenten im Detail:</p>
 
   <dl>
     <div class="term">
-      <dt>Server-Programm (technisch: „Next.js")</dt>
+      <dt>Next.js-Server</dt>
       <dd>
-        Die komplette Anwendung – die Seiten, die man im Browser sieht, <em>und</em> das
-        Programm, das im Hintergrund Anfragen beantwortet – läuft als <strong>ein einziges
-        Programm</strong> auf dem Server. Es gibt also kein separates „Backend-System", das
-        getrennt gewartet werden müsste.
+        Frontend (die React-Seiten im Browser) und Backend (die API-Routen unter
+        <code>/api/...</code>) laufen als <strong>ein einziger Node.js-Prozess</strong>.
+        Next.js übernimmt Routing, Server-Rendering und API-Endpunkte in einem
+        Framework – es gibt also kein separates Backend-System, das getrennt deployt
+        oder gewartet werden müsste.
       </dd>
     </div>
     <div class="term">
-      <dt>Kurzzeitiger Merkzettel (technisch: „In-Memory Relay")</dt>
+      <dt>In-Memory Relay (<code>src/lib/liveRelay.ts</code>)</dt>
       <dd>
-        Man kann sich das wie ein <strong>Whiteboard im Arbeitsspeicher des Servers</strong>
-        vorstellen: Sobald sich jemand anmeldet, wird der Name kurz dort notiert, damit er sofort
-        auf dem Beamer erscheinen kann. Dieses Whiteboard ist aber flüchtig – es wird nirgends
-        auf die Festplatte geschrieben. Läuft der Server neu an oder wird die Sitzung beendet,
-        ist der Eintrag weg. Genau das ist der Kern des Datensparsamkeits-Prinzips: Namen
-        existieren nur, solange sie gebraucht werden.
+        Pro Sitzung existiert ein Channel: eine <code>Map</code> mit den aktuellen
+        Teilnehmenden, ein <code>Set</code> mit den verbundenen Listenern für den
+        Live-Versand und ein Cleanup-Timer. Alle Channels liegen wiederum in einer
+        <code>Map</code>, die auf <code>globalThis</code> abgelegt ist, damit sie den
+        Hot-Module-Reload von Next.js übersteht. Meldet sich jemand an, landet der Name
+        nur in dieser Map im Arbeitsspeicher des Servers – nie in der Datenbank. Ein
+        Channel ohne verbundene Zuschauer wird nach 10 Minuten automatisch verworfen,
+        und pro Sitzung sind maximal 1000 Teilnehmende zugelassen. Nach einem Neustart
+        des Servers ist der Inhalt weg – das ist beabsichtigt: nach dem Prinzip der
+        Datensparsamkeit sollen Namen nur existieren, solange eine Sitzung tatsächlich
+        läuft.
       </dd>
     </div>
     <div class="term">
-      <dt>Live-Übertragung wie ein Ticker (technisch: „SSE – Server-Sent Events")</dt>
+      <dt>Server-Sent Events</dt>
       <dd>
-        Der Beamer-Bildschirm hält eine <strong>dauerhaft offene, einseitige Standleitung</strong>
-        zum Server-Programm – ähnlich einem Live-Ticker im Sportformat. Sobald sich jemand neu
-        anmeldet, schickt der Server diese Information sofort durch die offene Leitung. Die
-        Beamer-Seite muss dafür nicht neu geladen werden und fragt auch nicht ständig nach – sie
-        bekommt automatisch Bescheid.
+        Der Beamer-Bildschirm öffnet eine Anfrage an eine Streaming-Route des Servers,
+        die nicht sofort beantwortet, sondern offen gehalten wird. Direkt nach dem
+        Verbindungsaufbau schickt der Server den aktuellen Stand der Teilnehmenden-Liste,
+        danach bei jeder Änderung automatisch ein neues Datenpaket – ausgelöst durch das
+        In-Memory-Relay oben. Alle 15 Sekunden geht zusätzlich ein Heartbeat-Kommentar
+        durch die Verbindung, damit zwischengeschaltete Proxys sie nicht als inaktiv
+        abbrechen. Der Browser muss also weder die Seite neu laden noch regelmäßig
+        nachfragen – die Daten kommen automatisch, sobald sie sich ändern.
       </dd>
     </div>
     <div class="term">
       <dt>Datenbank (MariaDB)</dt>
       <dd>
-        Hier wird ausschließlich gespeichert, <strong>welche Sitzungen es gibt</strong> – Name der
-        Sitzung, Typ (Einzel- oder Team-Auslosung), Einstellungen, Status (aktiv/inaktiv/beendet).
-        Teilnehmernamen stehen hier nie drin.
+        Der Zugriff läuft über Prisma, allerdings ohne Prisma-Schema-Modelle – die
+        Abfragen sind rohes SQL. Die Tabelle <code>sessions</code> speichert
+        ausschließlich Metadaten: eindeutige Kennung, Name, Typ (Einzel- oder
+        Team-Auslosung), Status (aktiv/inaktiv/beendet), Einstellungen als JSON sowie
+        Zeitstempel. Eine Tabelle für Teilnehmende existiert zwar noch im
+        Datenbank-Schema, wird von der aktuellen Anwendung aber nicht mehr beschrieben –
+        Teilnehmendennamen laufen ausschließlich über das In-Memory-Relay.
       </dd>
     </div>
     <div class="term">
-      <dt>Anmelde-Ausweis für Dozierende (technisch: „httpOnly-Cookie")</dt>
+      <dt>httpOnly-Cookie (Dozierenden-Login)</dt>
       <dd>
-        Nach der Eingabe des Dozenten-Passworts merkt sich der Browser automatisch einen
-        unsichtbaren „Ausweis", der 12 Stunden lang gültig ist. Dadurch muss man das Passwort
-        nicht bei jedem Klick erneut eingeben. Die Anmelde- und Live-Seiten für Studierende
-        brauchen dagegen <em>kein</em> Passwort – sie sind nur über den jeweiligen QR-Code/Link
-        einer Sitzung erreichbar, tauchen also nirgends öffentlich auf.
+        Es gibt keine Nutzerverwaltung, sondern ein gemeinsames Passwort, das als
+        Umgebungsvariable auf dem Server hinterlegt ist. Nach erfolgreichem Login setzt
+        der Server ein Cookie mit einem Hash-Token, das 12 Stunden lang gültig ist – als
+        <code>httpOnly</code>-Cookie also für JavaScript im Browser nicht auslesbar und
+        zusätzlich nur über verschlüsselte Verbindungen übertragbar. Jede geschützte
+        API-Route prüft dieses Cookie einzeln beim Verarbeiten der Anfrage; es gibt keine
+        globale Middleware dafür. Die Anmelde- und Live-Seiten für Studierende brauchen
+        dagegen kein Passwort – sie sind nur über den QR-Code/Link einer konkreten
+        Sitzung erreichbar, tauchen also nirgends öffentlich auf.
       </dd>
     </div>
   </dl>
@@ -492,7 +510,8 @@
     </li>
     <li>Ein Update/Redeploy besteht aus einem einzigen Docker-Befehl, der das Image neu baut und den Container ersetzt.</li>
   </ul>
-  <p>Details (Datenbank-Schema, genaue Konfiguration) stehen in <code>docs/DEPLOYMENT.md</code> im Projekt-Repository.</p>
+  <p>Details (Datenbank-Schema, genaue Konfiguration) stehen in <code>docs/DEPLOYMENT.md</code> im
+    <a href="https://github.com/kfmdm/smart-student-picker" target="_blank" rel="noopener">Projekt-Repository</a>.</p>
 </section>
 
 <section id="faq">
@@ -532,7 +551,8 @@
 
 <footer>
   Smart Student Picker – interne Bedienungsanleitung. Technische Details siehe <code>README.md</code>,
-  <code>docs/DEPLOYMENT.md</code> und <code>docs/BACKLOG.md</code> im Projekt-Repository.
+  <code>docs/DEPLOYMENT.md</code> und <code>docs/BACKLOG.md</code> im
+  <a href="https://github.com/kfmdm/smart-student-picker" target="_blank" rel="noopener">Projekt-Repository</a>.
 </footer>
 
 </body>
